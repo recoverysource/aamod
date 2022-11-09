@@ -1,0 +1,12 @@
+name = "aamod"
+license = "GPLv2"
+licenselink = "https://github.com/recoverysource/aamod/blob/master/LICENSE.md"
+description = "Subtheme of Mainroad, designed for AA-focused (area, district, intergroup) websites."
+homepage = "https://github.com/recoverysource/aamod"
+demosite = "https://siouxfallsaa.org/"
+tags = ["blog", "responsive", "light", "multilingual", "customizable", "widgets", "wordpress", "aa", "alcoholics anonymous"]
+features = ["blog", "responsive", "multilingual", "widgets", "rss", "disqus", "google analytics", "wordpress"]
+min_version = "0.48"
+[author]
+  name = "Michael Lustfield"
+  homepage = "https://michael.lustfield.net"

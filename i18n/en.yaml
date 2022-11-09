@@ -1,0 +1,28 @@
+# General
+- id: website_source
+  translation: "website source"
+
+- id: aawebsite_title
+  translations: "A.A. Websites"
+
+- id: eventssidemenu_title
+  translation: "Events"
+
+- id: resources_title
+  translation: "Resources"
+
+# Meeting Page
+- id: meeting_building
+  translation: "Building:"
+
+- id: meeting_address
+  translation: "Address:"
+
+- id: meeting_phone
+  translation: "Meeting Phone:"
+
+- id: meeting_times
+  translation: "Meeting Times:"
+
+- id: meeting_type
+  translation: "Meeting Type:"

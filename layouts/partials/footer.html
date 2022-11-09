@@ -1,0 +1,10 @@
+<!-- Site forked with permission from https://github.com/recoverysource/aamod. -->
+<footer class="footer">
+	<div class="container footer__container flex">
+		{{ partial "footer_links.html" . }}
+		<div class="footer__copyright">
+			&copy; {{ now.Format "2006" }} {{ .Site.Params.copyright | default .Site.Title }}.
+			(<a href="{{ safeURL .Site.Params.source }}">{{ T "website_source" }}</a>)
+		</div>
+	</div>
+</footer>

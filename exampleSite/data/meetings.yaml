@@ -1,0 +1,48 @@
+# Use of space in this file is important.
+#
+# Basic Format (can exclude 'note:' and 'provides'):
+# - Valid "type" codes: https://github.com/code4recovery/spec#meeting-types
+#   EN:English, B:BigBook, C:Closed, O:Open, 12x12:TwelveByTwelve, D:Discussion,
+#   SP:Speaker, ST:StepStudy, TR:TraditionStudy, X:WheelchairAccess, BA:Babysitting
+#
+#<shortname>:
+#  name: <Name of Place>
+#  time:
+#    Sunday: ["00:00", "13:00"]
+#    Monday: ["00:00", "13:00"]
+#  place: <Name of Building>
+#  address: <Mailing Address of Location>
+#  note: |
+#    Can be on a single line like the rest or extended to a new line with a |
+#    and then indenting things by four spaces.
+#  type: [EN, B, TR]
+#  # Optional Fields
+#  longitude: 0.0
+#  latitude: 0.0
+#  hidefrom: [map, pdf, json]
+
+verylocal:
+  name: Very Local AA Group
+  time:
+    Tuesday: ["19:00"]
+    Saturday: ["10:00"]
+  place: Local School
+  address: 123 N Main Ave, CityName, ST, 42042
+  type: [EN, C, B, X]
+
+veryremote:
+  name: Very Remote AA Group
+  time:
+    Tuesday: ["09:00"]
+    Saturday: ["13:30"]
+  place: Some Church
+  address: 789 10th St, CityName, ST, 42424
+  type: [EN, C, B, X]
+
+local-alanon:
+  name: Sunshine Al-Anon
+  time:
+    Sunday: ["17:05"]
+  place: Local School
+  address: 123 N Main Ave, CityName, ST, 42042
+  type: [EN, AL-AN, D, X]

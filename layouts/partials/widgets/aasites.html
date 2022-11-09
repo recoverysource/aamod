@@ -1,0 +1,15 @@
+{{- if .Site.Params.widgets.aasites }}
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">{{ T "aawebsite_title" }}</h4>
+	{{ range .Site.Params.widgets.aasites }}
+	<div class="widget-social__item widget__item">
+		<a class="widget-social__link widget__link btn" title="{{ .title }}" rel="noopener noreferrer" href="{{ .url }}" target="_blank">
+			{{- if .icon }}
+				{{ partial .icon (dict "class" "widget-social__link-icon") }}
+			{{- end }}
+			<span>{{ .title }}</span>
+		</a>
+	</div>
+	{{ end }}
+</div>
+{{- end }}
