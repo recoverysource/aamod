@@ -12,22 +12,22 @@ meaning your website will only ever have to change/update for content or design.
 This added documentation walks a user through deploying this website and hosting
 it using [Github Pages](https://pages.github.com/). If you have decided you want
 what [we](https://area63aa.org/) and want to avoid major hurdles to get there,
-then you are ready to take [certain steps](https://github.com/recoverysource/aamod/wiki/New-Website).
+then you are ready to take [certain steps](https://recoverysource.github.io/aamod/website.html).
 
 Website Template
 ----------------
 
 Although it is possible to start a brand new Hugo website from scratch, import
 this theme, and get everything configured correctly, this
-[website (Hugo) template](https://github.com/recoverysource/hugo-template) let's you
+[website (Hugo) template](https://github.com/recoverysource/hugo-website) let's you
 skip that and get right from deployment to long-term maintenance (content updates).
 
 This theme is mostly a copy of the ``exampleSite/`` within this repository, along
 with Makefile/Github Actions/etc., which are used to automatically build the
 website when any changes are made.
 
-If all of this sounds complex, then the [Hugo website template](https://github.com/recoverysource/hugo-template)
-is exactly what you need and the [New Website instructions](https://github.com/recoverysource/aamod/wiki/New-Website)
+If all of this sounds complex, then the [Hugo website template](https://github.com/recoverysource/hugo-website)
+is exactly what you need and the [New Website instructions](https://recoverysource.github.io/aamod/website.html#new-website)
 were written for you.
 
 Subtheme
