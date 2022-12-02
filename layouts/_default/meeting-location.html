@@ -16,12 +16,14 @@
 		<div class="content post__content clearfix">
 			{{- $meeting := .Site.Data.meetings }}
 			{{- with index $meeting $.File.TranslationBaseName }}
-			<p><b>{{ T "meeting_building" }}</b> {{ .place }}</p>
+			{{- if .place }}
+			<p><b>{{ T "meeting_building" }}</b> {{ .place }}</p>{{ end }}
+			{{- if .address }}{{- if not (in .address ",,") }}
 			<p><b>{{ T "meeting_address" }}</b> <a href="http://maps.google.com/maps?q={{ safeURL .address }}" target="_blank">{{ .address }}</a></p>
-			{{- if $.Param "mapapikey" }}{{ if .address }}<iframe class="gmap"
+			{{- if $.Param "mapapikey" }}<iframe class="gmap"
 				referrerpolicy="no-referrer-when-downgrade"
 				src="https://www.google.com/maps/embed/v1/place?key={{ safeURL ($.Param "mapapikey") }}&q={{ safeURL .address }}"
-				allowfullscreen></iframe>{{ end }}{{ end }}
+				allowfullscreen></iframe>{{ end }}{{ end }}{{ end }}
 			{{- if .phone }}
 			<p><b>{{ T "meeting_phone" }}</b> <a href="tel:{{ .phone }}" >{{ .phone }}</a></p>{{ end }}
 			<p><b>{{ T "meeting_times" }}</b>
