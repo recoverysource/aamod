@@ -61,7 +61,7 @@ def load_yaml(fpath='data/meetings.yaml'):
     # if fpath a directory
     if os.path.isdir(fpath):
         m = {}
-        for path in glob.glob(f'{fpath}/*.yaml'):
+        for path in glob.glob(f'{fpath}/*'):
             tag = path.replace(f'{fpath}/', '', 1).replace('.yaml', '')
             m[tag] = yaml.load(open(path, 'r', encoding='utf-8'), Loader=yaml.SafeLoader)
         return m
