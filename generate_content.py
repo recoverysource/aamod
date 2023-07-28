@@ -187,7 +187,7 @@ def gen_meeting_json(meetings):
                     'slug': f'{key}-{dow}-{hour}',
                     'day': days.index(dow),
                     'time': hour,
-                    'timezone': 'America/Central',
+                    'timezone': 'America/Chicago',
                     'location': meeting.get('place', ''),
                     'notes': meeting.get('note', ''),
                     'region': conf.get('title'),
