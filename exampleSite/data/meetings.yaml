@@ -1,3 +1,6 @@
+# NOTE: THE DATA HERE IS FOR THE DEMONSTRATION WEBSITE:
+#   https://aamod-demo.area63aa.org/
+#
 # Use of space in this file is important.
 #
 # Basic Format (can exclude 'note:' and 'provides'):
@@ -27,7 +30,7 @@ verylocal:
     Tuesday: ["19:00"]
     Saturday: ["10:00"]
   place: Local School
-  address: 123 N Main Ave, CityName, ST, 42042
+  address: 123 N Main Ave, Sioux Falls, SD, 42042
   type: [EN, C, B, X]
 
 veryremote:
@@ -36,7 +39,7 @@ veryremote:
     Tuesday: ["09:00"]
     Saturday: ["13:30"]
   place: Some Church
-  address: 789 10th St, CityName, ST, 42424
+  address: 789 10th St, Sioux Falls, SD, 42424
   type: [EN, C, B, X]
 
 local-alanon:
@@ -44,5 +47,5 @@ local-alanon:
   time:
     Sunday: ["17:05"]
   place: Local School
-  address: 123 N Main Ave, CityName, ST, 42042
+  address: 123 N Main Ave, Sioux Falls, SD, 42042
   type: [EN, AL-AN, D, X]
