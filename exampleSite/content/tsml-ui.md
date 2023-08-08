@@ -9,7 +9,7 @@ Demonstration of use with <a href="https://github.com/code4recovery/tsml-ui/">ts
 
 <div
   id="tsml-ui"
-  data-src="https://aamod-demo.area63aa.org/meeting-times.json"
+  data-src="https://aamod-demo.recoverysource.io/meeting-times.json"
   data-timezone="America/Chicago"
   ></div>
 <script src="https://tsml-ui.code4recovery.org/app.js" async></script>

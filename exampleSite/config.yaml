@@ -1,9 +1,9 @@
 ##
 # This configuration is used for the live demo.
-# - Site: https://aamod-demo.area63aa.org/
+# - Site: https://aamod-demo.recoverysource.io/
 # - Used: https://github.com/recoverysource/hugo-website/blob/master/.github/workflows/deploy.yml
 ##
-baseURL: https://aamod-demo.area63aa.org/
+baseURL: https://aamod-demo.recoverysource.io/
 title: Statestown AA (Demo Site)
 
 languageCode: en-us
@@ -41,7 +41,7 @@ Params:
 
     aasites:
       - title: A.A. Area 63 (S.D.)
-        url: https://area63aa.org/
+        url: https://recoverysource.io/
       - title: A.A. World Services
         url: https://www.aa.org/
       - title: A.A. Grapevine
@@ -68,7 +68,7 @@ pdf-blurbs:
     {\7pt\textbf{24-Hour Hotline:} (123) 456-7890}\\
     {\7pt\textbf{Al-Anon Information:} al-anon.org}
   resources: |
-    {\7pt\textbf{Statestown Area:} aamod-demo.area63aa.org/meeting-times}\\
+    {\7pt\textbf{Statestown Area:} aamod-demo.recoverysource.io/meeting-times}\\
     {\7pt\textbf{South Dakota State:} www.area63.org}
   details: |
     \textbf{Statestown Area Intergroup}\\
