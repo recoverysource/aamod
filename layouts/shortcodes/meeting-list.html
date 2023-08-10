@@ -1,0 +1,223 @@
+{{/* Mash data into a format usable for key-based sorting */}}
+{{- $sorter := slice }}
+{{- $uniqAddrs := slice }}
+{{- $uniqDays := slice }}
+{{- $uniqHours := slice }}
+{{- $uniqTags := slice }}
+{{- range $key, $meeting := $.Site.Data.meetings }}
+  {{- range $tag := (default $meeting.type slice) }}
+    {{- if not (in $uniqTags $tag) }}{{ $uniqTags = $uniqTags | append $tag }}{{ end }}
+  {{- end }}
+  {{- range $day, $hours := $meeting.time }}
+    {{- if not (in $uniqDays $day) }}{{ $uniqDays = $uniqDays | append $day }}{{ end }}
+    {{- range $hour := $hours }}
+      {{- $sortTime := printf "%s %s" $day $hour }}
+      {{- $addrParts := split (or $meeting.address ",,,Online") "," }}
+      {{- $sortAddr := trim (index (last 1 $addrParts) 0) " " }}
+      {{- if not (in $uniqAddrs $sortAddr) }}{{ $uniqAddrs = $uniqAddrs | append $sortAddr }}{{ end }}
+      {{- if not (in $uniqHours $hour) }}{{ $uniqHours = $uniqHours | append $hour }}{{ end }}
+      {{- $sorter = $sorter | append (dict
+         "key" $key
+         "sortTime" $sortTime
+         "day" $day
+         "hour" $hour
+         "sortAddr" $sortAddr
+         ) }}
+    {{- end }}
+  {{- end }}
+{{- end -}}
+
+{{/* Determine which list type should be generated */}}
+{{- if eq (.Get "mode") "interactive" }}
+{{ $sortedList := sort $sorter "sortTime" }}
+<script language="javascript" type="text/javascript" src="/js/tconvert.js"></script>
+<style>
+/* Styling for the filter menu */
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+/* Styling for each filter group */
+.filter-group {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+/* Styling for the filter selects */
+.filter-select {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: white;
+  font-size: 14px;
+  min-width: 150px;
+}
+</style>
+<div id="filter-menu" class="search-bar">
+
+  <div class="filter-search"><b>{{ T "Filter" }}:</b></div>
+  <noscript>{{ T "filter_noscript" }}</noscript>
+  <div class="filter-group">
+    <label for="time-filter">{{ T "Time" }}:</label>
+    <select id="time-filter" class="filter-select">
+      <option value="">{{ T "all_times" }}</option>
+      {{- range $token := $sortedList }}
+      <option value="{{ $token.hour }}">{{ $token.hour }}</option>
+      {{- end }}
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <label for="day-filter">{{ T "Day" }}:</label>
+    <select id="day-filter" class="filter-select">
+      <option value="">{{ T "all_days" }}</option>
+      {{- range $dow := slice "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" }}{{ if in $uniqDays $dow }}
+      <option value="{{ $dow }}">{{ T $dow }}</option>
+      {{- end }}{{ end }}
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <label for="region-filter">{{ T "Region" }}:</label>
+    <select id="region-filter" class="filter-select">
+      <option value="">{{ T "all_regions" }}</option>
+      {{- range $region := sort $uniqAddrs }}
+      <option value="{{ $region }}">{{ $region }}</option>
+      {{- end }}
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <label for="tag-filter">{{ T "Tag" }}:</label>
+    <select id="tag-filter" class="filter-select">
+      <option value="">{{ T "all_tags" }}</option>
+      {{- range $tag := sort $uniqTags }}
+      <option value="{{ $tag }}">{{ $tag }}</option>
+      {{- end }}
+    </select>
+  </div>
+</div>
+
+<table id="meeting-table">
+  <thead>
+    <tr>
+      <th>{{ T "Time" }}</th>
+      <th>{{ T "Meeting" }}</th>
+      <th>{{ T "Location" }}</th>
+      <th>{{ T "Address" }}</th>
+      <th>{{ T "Region" }}</th>
+      <th style="display:none;">Tags</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{- range $token := $sortedList }}
+    {{- $meeting := index $.Site.Data.meetings $token.key }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}
+    <tr class="meeting-row" data-region="{{ trim (index (last 1 $addrParts) 0) " " }}" data-day="{{ $token.day }}" data-time="{{ $token.hour }}" data-tag="{{ range $tag := $meeting.type }}-{{ $tag }}{{ end }}-">
+      <td><script lang="javascript"> document.write(tConvert("{{ $token.hour }}")); document.write(" - {{ $token.day }}");</script><noscript>{{ $token.hour }} {{ $token.day }}</noscript></td>
+      <td><a href="/meetings/{{ $token.key }}">{{ $meeting.name }}</a>{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }}, <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} (Open){{ end }}</td>
+      <td>{{ $meeting.place }}</td>
+      <td>{{ index $addrParts 0 }}</td>
+      <td>{{ trim (index (last 1 $addrParts) 0) " " }}</td>
+      <td style="display:none;">{{ range $tag := (default $meeting.type slice)  }}-{{ $tag }}{{ end }}-</td>
+    </tr>
+    {{- end }}
+  </tbody>
+</table>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const regionFilter = document.getElementById("region-filter");
+  const dayFilter = document.getElementById("day-filter");
+  const timeFilter = document.getElementById("time-filter");
+  const meetingRows = document.querySelectorAll(".meeting-row");
+  const tagFilter = document.getElementById("tag-filter");
+
+  regionFilter.addEventListener("change", filterMeetings);
+  dayFilter.addEventListener("change", filterMeetings);
+  timeFilter.addEventListener("change", filterMeetings);
+  tagFilter.addEventListener("change", filterMeetings);
+
+  // Load saved filter choices when the page is loaded
+  loadSavedFilters();
+
+  function filterMeetings() {
+    const selectedRegion = regionFilter.value;
+    const selectedDay = dayFilter.value;
+    const selectedTime = timeFilter.value;
+    const selectedTag = tagFilter.value;
+
+    meetingRows.forEach(row => {
+      const rowRegion = row.getAttribute("data-region");
+      const rowDay = row.getAttribute("data-day");
+      const rowTime = row.getAttribute("data-time");
+      const rowTag = row.getAttribute("data-tag");
+
+      const regionMatch = selectedRegion === "" || rowRegion === selectedRegion;
+      const dayMatch = selectedDay === "" || rowDay === selectedDay;
+      const timeMatch = selectedTime === "" || rowTime === selectedTime;
+      const tagMatch = selectedTag === "" || rowTag.includes('-' + selectedTag + '-');
+
+      row.style.display = regionMatch && dayMatch && timeMatch && tagMatch ? "table-row" : "none";
+    });
+
+    // Save current filter choices to local storage
+    saveFilters(selectedRegion, selectedDay, selectedTime, selectedTag);
+  }
+
+  function saveFilters(region, day, time, tag) {
+    const filters = {
+      region: region,
+      day: day,
+      time: time,
+      tag: tag
+    };
+
+    localStorage.setItem("savedFilters", JSON.stringify(filters));
+  }
+
+  function loadSavedFilters() {
+    const savedFilters = JSON.parse(localStorage.getItem("savedFilters"));
+
+    if (savedFilters) {
+      regionFilter.value = savedFilters.region;
+      dayFilter.value = savedFilters.day;
+      timeFilter.value = savedFilters.time;
+      tagFilter.value = savedFilters.tag;
+
+      filterMeetings(); // Apply filters based on loaded values
+    }
+  }
+});
+</script>
+{{- else if  eq (.Get "mode") "address" }}
+{{ range $addr := sort $uniqAddrs }}
+
+{{ if eq $addr "0" }}Online{{ else }}{{ $addr }}{{ end }}
+----
+
+<ul id="meeting-address" class="meeting-list">{{- range $meeting := sort $.Site.Data.meetings }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}{{- if hasSuffix (index $addrParts 3) $addr }}
+  <li><a href="/meetings/{{ $meeting.key }}">{{ $meeting.name }}</a>, {{ index $addrParts 0 }}{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }}, <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} (Open){{ end }}</li>
+{{ end }}{{ end }}</ul>
+{{ end }}{{/* /range */}}
+{{- else }}{{/* default: "time" */}}
+{{ $sortedList := sort $sorter "sortTime" }}
+{{ range $dow := slice "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" }}{{ if in $uniqDays $dow }}
+
+{{ $dow }}
+----
+
+<script language="javascript" type="text/javascript" src="/js/tconvert.js"></script>
+<ul id="meeting-time" class="meeting-list">{{- range $token := $sortedList }}{{- if eq $token.day $dow }}
+{{- $meeting := index $.Site.Data.meetings $token.key }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}
+  <li><script lang="javascript"> document.write(tConvert("{{ $token.hour }}"));</script><noscript>{{ $token.hour }}</noscript>: <a href="/meetings/{{ $token.key }}">{{ $meeting.name }}</a>, {{ index $addrParts 0 }}{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }}, <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} (Open){{ end }}</li>
+{{ end }}{{ end }}</ul>
+{{ end }}{{ end }}{{/* /range */}}
+{{ end }}

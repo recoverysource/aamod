@@ -1,0 +1,42 @@
+<script type="text/javascript">
+  let map;
+  let service;
+  let infowindow;
+
+  function initMap() {
+    var center = {
+      "lat": {{ .Get "latitude" | default 0 | int }},
+      "lng": {{ .Get "longitude" | default 0 | int }}};
+    var locations = [
+      {{- range $meeting_id, $meeting := $.Site.Data.meetings }}
+      {{- if and $meeting.longitude $meeting.latitude $meeting.name $meeting.address }}
+      [ "{{ $meeting.name }}", "<b><a class=\"maplink\" href=\"/meetings/{{ $meeting_id }}\">{{ $meeting.name }}</a></b>{{ if $meeting.place }}<br>{{ $meeting.place }}{{ end }}<br>{{ $meeting.address }}<br><a class=\"maplink\" href=\"/meetings/{{ $meeting_id }}\">Meeting Information</a>", {{ float $meeting.latitude }}, {{ float $meeting.longitude }}],{{ end }}{{ end }}
+      ];
+    infowindow = new google.maps.InfoWindow();
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: center,
+      zoom: {{ .Get "zoom" | default 10 | int }},
+    });
+
+    for (let count = 0; count < locations.length; count++) {
+      let marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[count][2], locations[count][3]),
+        map: map,
+        title: locations[count][0]
+      });
+
+      google.maps.event.addListener(marker, 'click', (function (marker, count) {
+        return function () {
+          infowindow.setContent(locations[count][1]);
+          infowindow.open(map, marker);
+        }
+      })(marker, count));
+    }
+  }
+
+  window.initMap = initMap;
+</script>
+<div id="map" class="gmap"></div>
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key={{ safeURL ($.Site.Params.mapapikey) }}&callback=initMap&libraries=places">
+</script>

@@ -1,4 +1,5 @@
 # General
+
 - id: website_source
   translation: "website source"
 
@@ -11,18 +12,83 @@
 - id: resources_title
   translation: "Resources"
 
+# Day of Week
+
+- id: Sunday
+  translation: Sunday
+
+- id: Monday
+  translation: Monday
+
+- id: Tuesday
+  translation: Tuesday
+
+- id: Wednesday
+  translation: Wednesday
+
+- id: Thursday
+  translation: Thursday
+
+- id: Friday
+  translation: Friday
+
+- id: Saturday
+  translation: Saturday
+
 # Meeting Page
+
 - id: meeting_building
-  translation: "Building:"
+  translation: "Building"
 
 - id: meeting_address
-  translation: "Address:"
+  translation: "Address"
 
 - id: meeting_phone
-  translation: "Meeting Phone:"
+  translation: "Meeting Phone"
 
 - id: meeting_times
-  translation: "Meeting Times:"
+  translation: "Meeting Times"
 
 - id: meeting_type
-  translation: "Meeting Type:"
+  translation: "Meeting Type"
+
+# Meeting List - Filters
+
+- id: Filter
+  translation: Filter
+
+- id: filter_noscript
+  translation: "Filters require javascript!"
+
+- id: all_times
+  translation: "All Times"
+
+- id: all_days
+  translation: "All Days"
+
+- id: all_regions
+  translation: "All Regions"
+
+- id: all_tags
+  translation: "All Tags"
+
+- id: Time
+  translation: Time
+
+- id: Day
+  translation: Day
+
+- id: Tag
+  translation: Tag
+
+- id: Meeting
+  translation: Meeting
+
+- id: Location
+  translation: Location
+
+- id: Address
+  translation: Address
+
+- id: Region
+  translation: Region

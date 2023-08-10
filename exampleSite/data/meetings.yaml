@@ -1,51 +1,175 @@
-# NOTE: THE DATA HERE IS FOR THE DEMONSTRATION WEBSITE:
-#   https://aamod-demo.recoverysource.io/
+# NOTE: DATA HERE IS FOR DEMONSTRATION: https://aamod-demo.recoverysource.io/
 #
-# Use of space in this file is important.
+# [Format Notes]
 #
-# Basic Format (can exclude 'note:' and 'provides'):
-# - Valid "type" codes: https://github.com/code4recovery/spec#meeting-types
-#   EN:English, B:BigBook, C:Closed, O:Open, 12x12:TwelveByTwelve, D:Discussion,
-#   SP:Speaker, ST:StepStudy, TR:TraditionStudy, X:WheelchairAccess, BA:Babysitting
+#  - Full Documentation: https://recoverysource.io/aamod/usage.html#meeting-format
+#  - Use of correct space and syntax in yaml files is CRITICAL!
+#    If unsure, syntax can be validated with: https://yaml-online-parser.appspot.com/
+#  - Required Fields: [name, time, type]
+#  - Valid "type" codes come from https://github.com/code4recovery/spec#meeting-types)
+#    EN:English, B:BigBook, C:Closed, O:Open, 12x12:TwelveByTwelve, D:Discussion,
+#    SP:Speaker, ST:StepStudy, TR:TraditionStudy, X:WheelchairAccess, BA:Babysitting
+#
+# [Basic Format]
 #
 #<shortname>:
 #  name: <Name of Place>
 #  time:
 #    Sunday: ["00:00", "13:00"]
 #    Monday: ["00:00", "13:00"]
+#  timezone: <Location Timezone>
 #  place: <Name of Building>
 #  address: <Mailing Address of Location>
 #  note: |
-#    Can be on a single line like the rest or extended to a new line with a |
-#    and then indenting things by four spaces.
+#      Can be on a single line like the rest or extended to a new line with a |
+#      with content indented using four spaces.
 #  type: [EN, B, TR]
-#  # Optional Fields
 #  longitude: 0.0
 #  latitude: 0.0
 #  hidefrom: [map, pdf, json]
+#  country: US
 
-verylocal:
-  name: Very Local AA Group
+# TEST CONSIDERATIONS: No Meeting Monday! (no time:Monday:[])
+
+genzoom:
+  name: GenZoom Recovery
+  time:
+    Sunday: ["12:00"]
+    Tuesday: ["07:50", "12:00"]
+    Wednesday: ["07:50", "12:00"]
+    Thursday: ["07:50", "12:00"]
+    Friday: ["07:50", "12:00"]
+    Saturday: ["07:50", "12:00"]
+  place: Zoom-Only
+  note: |
+      We meet daily for quick and short meetings to help each other through the work day.
+      <b>Zoom:</b> https://us02web.zoom.us/j/123456789
+      <b>Meeting:</b> 123-456-789 <b>Password:</b> <none>
+  type: [EN, O, SP]
+
+# TEST CONSIDERATIONS: hidefrom=[pdf, json]
+renewedspirit:
+  name: Renewed Spirit AA
+  time:
+    Sunday: ["19:00"]
+    Wednesday: ["19:00"]
+  place: Serenity Haven
+  address: 123 Hopeful Street, Reviveville, NV, 89004
+  type: [EN, C, D, X]
+  longitude: -115.0000
+  latitude: 36.0000
+  hidefrom: [json, pdf]
+
+hopefulhearts:
+  name: Hopeful Hearts Group
+  time:
+    Tuesday: ["20:00"]
+    Friday: ["20:00"]
+  place: Harmony House
+  address: 456 Courage Avenue, Upliftburg, NV, 89004
+  type: [EN, C, ST, D]
+  longitude: -114.9000
+  latitude: 36.1000
+
+# TEST CONSIDERATIONS: no place
+rebirthconnections:
+  name: Rebirth Connections AA
+  time:
+    Wednesday: ["20:00"]
+    Saturday: ["11:00"]
+  address: 789 Restoration Plaza, Riseville, NV, 89004
+  type: [EN, C, B, X]
+  longitude: -114.8000
+  latitude: 36.2000
+
+healingechoes:
+  name: Healing Echoes Group
+  time:
+    Sunday: ["20:00"]
+    Thursday: ["20:00"]
+  place: Tranquil Mansion
+  address: 987 Serene Road, Embraceville, NV, 89004
+  type: [EN, O, B]
+  longitude: -114.7000
+  latitude: 36.3000
+
+# TEST CONSIDERATIONS: timezone=America/Chicago
+inspiringjourney:
+  name: Inspiring Journey AA
   time:
     Tuesday: ["19:00"]
     Saturday: ["10:00"]
-  place: Local School
-  address: 123 N Main Ave, Sioux Falls, SD, 42042
-  type: [EN, C, B, X]
+  place: Renewal Church Hall
+  address: 543 Hope Lane, Harmonyburg, NV, 89004
+  type: [EN, O, 12x12, X]
+  longitude: -114.6000
+  latitude: 36.4000
+  timezone: America/Chicago
 
-veryremote:
-  name: Very Remote AA Group
+# TEST CONSIDERATIONS: Real Address
+risingtogether:
+  name: Rising Together AA
   time:
-    Tuesday: ["09:00"]
-    Saturday: ["13:30"]
-  place: Some Church
-  address: 789 10th St, Sioux Falls, SD, 42424
-  type: [EN, C, B, X]
+    Wednesday: ["19:00"]
+    Friday: ["19:00"]
+  place: Unity Community Center
+  address: 721 S Moapa Valley Blvd, Overton, NV, 89040
+  type: [EN, C, B]
+  note: Some demonstration note.
+  longitude: -114.5000
+  latitude: 36.5000
 
-local-alanon:
-  name: Sunshine Al-Anon
+# TEST CONSIDERATIONS: Meeting Variations=[Open, Womens-Closed, Ally-Closed]
+renewedhope:
+  name: Renewed Hope Group
   time:
-    Sunday: ["17:05"]
-  place: Local School
-  address: 123 N Main Ave, Sioux Falls, SD, 42042
-  type: [EN, AL-AN, D, X]
+    Thursday: ["19:00"]
+    Sunday: ["20:00"]
+  place: Empowerment Warehouse
+  address: 234 Progress Lane, Reviveburg, NV, 89006
+  type: [EN, O, B, X]
+  longitude: -114.4000
+  latitude: 36.6000
+
+renewedhope-women:
+  name: Renewed Hope Group for Women
+  time:
+    Wednesday: ["20:00"]
+  place: Empowerment Warehouse
+  address: 234 Progress Lane, Reviveburg, NV, 89006
+  type: [EN, C, B, X, BA]
+  longitude: -114.4000
+  latitude: 36.6000
+
+renewedhope-ally:
+  name: Renewed Hope Group - Ally Meeting
+  time:
+    Tuesday: ["10:00"]
+  place: Empowerment Warehouse
+  address: 234 Progress Lane, Reviveburg, NV, 89006
+  type: [EN, C, 12x12, G, LGBTQ]
+  longitude: -114.4000
+  latitude: 36.6000
+
+# TEST CONSIDERATIONS: type=[X,BA]
+transcendentpath:
+  name: Serenity Path AA
+  time:
+    Sunday: ["10:00", "19:00"]
+    Saturday: ["19:00"]
+  place: Harmony Church
+  address: 345 Ascend Street, Serenity Springs, NV, 89007
+  type: [EN, O, B, 12x12, X, BA]
+  longitude: -114.3000
+  latitude: 36.7000
+
+# TEST CONSIDERATIONS: no longitude
+broken-test-1:
+  name: Broken Meeting No.1
+  time:
+    Sunday: ["19:00"]
+    Thursday: ["12:00"]
+  place: Guiding Schoolhouse
+  address: 567 Beacon Lane, Nurtureville, NV, 89007
+  type: [EN, C, B]
+  latitude: 36.8000

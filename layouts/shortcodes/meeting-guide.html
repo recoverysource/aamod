@@ -1,0 +1,26 @@
+{{- $meetingData := slice }}
+{{- $dowInt := dict "Sunday" 0 "Monday" 1 "Tuesday" 2 "Wednesday" 3 "Thursday" 4 "Friday" 5 "Saturday" 6 }}
+{{- range $key, $meeting := index $.Site.Data.meetings }}{{ $hidden := in $meeting.hidefrom "json" }}{{ if not $hidden }}
+  {{- $addrParts := split (or $meeting.address ",,,") "," }}
+  {{- range $dow, $hours := index $meeting "time" }}{{ range $hour := $hours }}
+    {{- $meetingData = $meetingData | append (dict
+        "name" $meeting.name
+        "slug" (printf "%s-%s-%s" $key $dow $hour)
+        "day" (index $dowInt $dow)
+	"time" $hour
+	"timezone" (or $meeting.timezone ($.Get "timezone") "Africa/Asmara")
+	"location" $meeting.place
+	"notes" (default $meeting.note "")
+	"region" $.Site.Title
+	"url" (print $.Site.BaseURL "/" "meetings" "/" $key)
+	"types" $meeting.type
+	"approximate" false
+	"address" (trim (index $addrParts 0) " ")
+	"city" (trim (index $addrParts 1) " ")
+	"state" (trim (index $addrParts 2) " ")
+	"postal_code" (trim (index $addrParts 3) " ")
+	"country" (default $meeting.country "US")
+        ) }}
+  {{- end }}{{ end }}
+{{- end }}{{ end }}
+{{- $meetingData | jsonify (dict "indent" "  " "noHTMLEscape" true) }}

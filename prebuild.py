@@ -4,9 +4,8 @@ Generate pages and content from meeting data.
 
 This is for automation and testing; do not check generated files into git.
 '''
-import geopy
+import argparse
 import glob
-import json
 import os
 import pathlib
 import subprocess
@@ -14,37 +13,90 @@ import time
 import yaml
 
 
-# Meeting "types" that get displayed in summaries
-SUMMARY_TAGS = {
-        'X': '<img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />',
-        'BA': '<img src="/img/childcare.png" alt="Childcare Available" width="15" />',
-        'O': 'Open',
-        'B': 'Big Book',
-        '12x12': '12x12',
-        'TR': 'Traditions',
-        'W': 'Women-Only',
-        'G': 'Gay-Friendly',
-        }
+class OptsParser(object):
+    '''
+    Object for handling arguments passed to script and loading runtime configuration.
+    '''
 
+    def __init__(self):
+        # Configure formatted help text
+        self.parser = argparse.ArgumentParser(
+            usage='prebuild.py [-h] <optional arguments>',
+            formatter_class=lambda prog: argparse.HelpFormatter(
+                prog,
+                width=100))
+        # Add options to ArgumentParser
+        self._add_opts()
 
-# use with: time.strftime('%d %b %Y', LAST_UPDATED)
-LAST_UPDATED = time.localtime(int(subprocess.check_output(['git', 'log', '-1', '--pretty=%ct', 'data/*meetings*']).decode().strip()))
+    def parse_opts(self):
+        '''
+        Return parsed options
+        '''
+        return self.parser.parse_args()
+
+    def _add_opts(self):
+        '''
+        Add available arguments to argparse instance
+        '''
+        self.parser.add_argument(
+            '-c', '--config',
+            dest='config',
+            action='store',
+            metavar='X',
+            help='Configuration directory (default: ./prebuild.yaml)',
+            default='./prebuild.yaml')
+        self.parser.add_argument(
+            '-r', '--runtime',
+            dest='runtime',
+            action='store',
+            metavar='X',
+            help='Runtime overrides for yaml configuration values (default: {})',
+            default='{}')
 
 
 def main():
     '''
     Build site data
     '''
-    meetings = load_yaml()
+    # Load command line parameters
+    config = load_configuration()
 
-    # See "Path:" in function for files produced
-    gen_meeting_times(meetings)
-    gen_meeting_zips(meetings)
-    gen_meeting_stubs(meetings)
-    gen_meeting_json(meetings)
-    gen_meeting_geos(meetings)  # if not present
-    if gen_meeting_tex(meetings):
-        gen_meeting_pdf(meetings)
+    # Collect meeting information
+    meetings = load_yaml(config['meeting-data'])
+
+    # Generate content
+    #if 'stubs' in config['builders']:
+    #    gen_meeting_stubs(meetings, config['stub-path'])
+    if gen_meeting_tex(meetings, config):
+        gen_meeting_pdf(config['pdf-path'])
+
+
+def load_configuration():
+    '''
+    Returns a dictionary of runtime configuration
+    '''
+    # Load command line options
+    opts = OptsParser().parse_opts()
+
+    # Default configuration
+    conf = {
+        'builders': ['stubs', 'pdf'],
+        'meeting-data': 'data/meetings.yaml',
+        'stub-path': 'content/meetings/{shortname}.md',
+        'pdf-path': 'static/meeting-schedule.pdf',
+        'pdf-cols': {'aalist': 4, 'anonlist': 2},
+        'helpline': '1-800-123-4567',
+        }
+
+    # Read from configuration file
+    if os.path.exists(opts.config):
+        conf.update(load_yaml(opts.config))
+
+    # Handle any command-line overrides
+    conf.update(yaml.safe_load(opts.runtime))
+
+    # Return assembled configuration
+    return conf
 
 
 def load_yaml(fpath='data/meetings.yaml'):
@@ -68,243 +120,42 @@ def load_yaml(fpath='data/meetings.yaml'):
     raise Exception('Could not load yaml data')
 
 
-
-def get_geo(address):
+def gen_meeting_stubs(meetings, stub_path):
     '''
-    Returns a geo object from a searched address
+    Generate page stub for hugo.
     '''
-    locator = geopy.Nominatim(user_agent="aamod")
-    return locator.geocode(address)
-
-
-def gen_meeting_times(meetings):
-    '''
-    Generate a markdown file with list of all meeting times
-
-    Path: content/meeting-times.md
-    '''
-    sorter = []
-    for key, meeting in meetings.items():
-        for day, hours in meeting['time'].items():
-            for hour in hours:
-                sorter.append(f'{day}#{hour}#{key}')
-    sorter = sorted(sorter)
-
-    with open('content/meeting-times.md', 'w', encoding='utf-8') as fh:
-        fh.writelines([
-            '---\n',
-            'title: Meeting Times\n',
-            'date: ', time.strftime('%Y-%m-%d', LAST_UPDATED), '\n',
-            'layout: singlemap\n',
-            'menu:\n',
-            '  main:\n',
-            '    weight: 30\n',
-            '---\n\n',
-            '<script language="javascript" type="text/javascript" src="/js/tconvert.js"></script>\n',
-            '<b>Last Updated:</b> ', time.strftime('%d %b %Y', LAST_UPDATED), '\n\n',
-            'Click the name of a meeting for additional information.',
-            '<br />All meetings are non-smoking and closed, unless noted as Open.\n\n',
-            ])
-        for dow in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']:
-            fh.writelines([dow, '\n----\n\n'])
-            for [day, hour, key] in [x.split('#') for x in sorter if x.startswith(dow)]:
-                mtype = meetings[key].get('type', [])
-                fh.writelines([
-                    f'- <script lang="javascript"> document.write(tConvert("{hour}"));</script>',
-                    f'<noscript>{hour}</noscript>',
-                    f': <a href="/meetings/{key}">{meetings[key]["name"]}</a>',
-                    f', {meetings[key].get("address", "").partition(",")[-1]}',
-                    ' | ' if [k for k in SUMMARY_TAGS.keys() if k in mtype] else '',
-                    ', '.join([v for k, v in SUMMARY_TAGS.items() if k in mtype]),
-                    '\n',
-                    ])
-            fh.write('\n')
-
-
-def gen_meeting_zips(meetings):
-    '''
-    Generate a markdown file of meetings based on location
-
-    Path: content/meeting-zips.md
-    '''
-    sorter = []
-    for key, meeting in meetings.items():
-        sorter.append(f'{meeting["address"].split(",")[-1:]}#{key}')
-    sorter = sorted(sorter)
-
-    with open('content/meeting-zips.md', 'w', encoding='utf-8') as fh:
-        fh.writelines([
-            '---\n',
-            'title: Locations\n',
-            'date: ', time.strftime('%Y-%m-%d', LAST_UPDATED), '\n',
-            'layout: singlemap\n',
-            'menu:\n',
-            '  main:\n',
-            '    weight: 35\n',
-            '---\n\n',
-            '<b>Last Updated:</b> ', time.strftime('%d %b %Y', LAST_UPDATED), '\n\n',
-            'Click the name of a meeting for additional information.',
-            '<br />All meetings are non-smoking and closed, unless noted as Open.\n\n',
-            ])
-        z = -1
-        for [zipcode, key] in [x.split('#') for x in sorter]:
-            if z != zipcode:
-                z = zipcode
-                fh.writelines([
-                    '\n',
-                    meetings[key]['address'].partition(',')[-1],
-                    '\n----\n\n',
-                    ])
-            mtype = meetings[key].get('type', [])
-            fh.writelines([
-                f'- <a href="/meetings/{key}">{meetings[key]["name"]}</a>',
-                ', ', meetings[key].get("address", "").split(",")[0],
-                ' | ' if [k for k in SUMMARY_TAGS.keys() if k in mtype] else '',
-                ', '.join([v for k, v in SUMMARY_TAGS.items() if k in mtype]),
-                '\n',
-                ])
-        fh.write('\n')
-
-
-def gen_meeting_json(meetings):
-    '''
-    Generate a json file with list of all meeting times
-    Format: https://github.com/code4recovery/spec
-
-    Path: static/meeting-times.json
-    '''
-    conf = load_yaml('config.yaml')
-    meeting_data = []
-    days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    for key, meeting in meetings.items():
-        if 'json' in meeting.get('hidefrom', []):
-            continue
-        address = meeting.get('address').split(',')
-        for dow, hours in meeting['time'].items():
-            for hour in hours:
-                meeting_data.append({
-                    'name': meeting['name'],
-                    'slug': f'{key}-{dow}-{hour}',
-                    'day': days.index(dow),
-                    'time': hour,
-                    'timezone': 'America/Chicago',
-                    'location': meeting.get('place', ''),
-                    'notes': meeting.get('note', ''),
-                    'region': conf.get('title'),
-                    'url': f'{conf.get("baseURL").rstrip("/")}/meetings/{key}',
-                    'types': meeting.get('type', []),
-                    'approximate': False,
-                    'address': address[0].strip(),
-                    'city': address[1].strip(),
-                    'state': address[2].strip(),
-                    'postal_code': address[3].strip(),
-                    'country': 'US',
-                    })
-
-    with open('static/meeting-times.json', 'w', encoding='utf-8') as fh:
-        fh.write(json.dumps(meeting_data, indent=4))
-
-
-def gen_meeting_geos(meetings):
-    '''
-    Generate a yaml file with list of all meeting locations
-
-    Path: data/geos.yaml
-    '''
-    if os.path.exists('data/geos.yaml'):
-        print('WARN: data/geos.yaml exists, not re-creating')
-        return
-
-    locator = geopy.Nominatim(user_agent='aamod')
-    with open('data/geos.yaml', 'w', encoding='utf-8') as fh:
-        for key, meeting in meetings.items():
-            if 'map' in meeting.get('hidefrom', []):
-                continue
-            if not meeting.get('address'):
-                continue
-            if not meeting.get('longitude') or not meeting.get('latitude'):
-                location = locator.geocode(meeting['address'])
-                if not location:
-                    print(f'WARN: No geo data found for address: {meeting["address"]}')
-                    continue
-                if not meeting.get('longitude'):
-                    meeting['longitude'] = location.longitude
-                if not meeting.get('latitude'):
-                    meeting['latitude'] = location.latitude
-            fh.writelines([
-                f'{key}:\n',
-                f'  dsc: <b>{meeting.get("name", "")}</b>',
-                f'<br>{meeting.get("address", "")}<br>',
-                f'<a class="maplink" href="/meetings/{key}">Meeting Info</a>\n',
-                f'  name: {meeting.get("name", "")}\n',
-                f'  lng: {meeting.get("longitude", "-0.0")}\n',
-                f'  lat: {meeting.get("latitude", "-0.0")}\n',
-                '\n'])
-            time.sleep(0.2)
-
-def gen_meeting_stubs(meetings):
-    '''
-    Generate page stubs from data. These stubs use the [meeting-location] to
-    offload templating logic to hugo's templating engine.
-    meeting-location: themes/aamod/layouts/_default/meeting-location.html
-
-    Path: content/meetings/*.md
-    '''
-    # Ensure directory exists
-    pathlib.Path('content/meetings').mkdir(parents=True, exist_ok=True)
-
-    # cleanup
-    for path in glob.glob('content/meetings/*.md'):
-        if path != 'content/meetings/_index.md':
+    # Remove old stubs
+    for path in glob.glob(stub_path.replace('{shortname}', '*')):
+        if 'index' not in path:
             os.remove(path)
 
+    # Generate one stub for each {shortname}
     for key, meeting in meetings.items():
         mtype = meeting.get('type', [])
-        with open(f'content/meetings/{key}.md', 'w', encoding='utf-8') as fh:
+        with open(stub_path.format(shortname=key), 'w', encoding='utf-8') as fh:
             fh.writelines([
                 '---\n',
                 f'title: {meeting["name"]}\n',
-                'layout: meeting-location\n',
-                '---\n\n',
-                ', '.join([SUMMARY_TAGS[x] for x in SUMMARY_TAGS if x in mtype]),
-                '\n\n<!--more-->\n',
+                '---\n\n{{< meeting-info meeting_id="', key, '" >}}\n',
                 ])
 
 
-def _meeting_hours(hours):
-    '''
-    Prints a formatted list of meeting hours cast to 12-hour format.
-    '''
-    hrs = []
-    for hour in sorted(hours):
-        t = time.strftime('%-I:%M%p', time.strptime(hour, '%H:%M'))
-        hrs.append(f'\\mbox{{{t}}}')
-    return ', '.join(hrs)
-
-
-def _meeting_tags(taglist):
-    '''
-    Prints a formatted list of (presented) meeting tags
-    '''
-    meeting_tags = []
-    if 'X' in taglist:
-        meeting_tags.append('WA')
-    if 'O' in taglist:
-        meeting_tags.append('Open')
-    if meeting_tags:
-        return r'\hfill ' + ', '.join(meeting_tags)
-    return ''
-
-
-def gen_meeting_tex(meetings):
+def gen_meeting_tex(meetings, conf):
     '''
     This generates the file used to produce the meetings list pdf.
 
     Path: static/meeting-schedule.tex
     '''
-    conf = load_yaml('config.yaml')
     if not conf.get('pdf-blurbs'):
         return False
+
+    # Find the last time the meetings directory was updated.
+    if conf['meeting-data'].endswith('yaml'):
+        conf['meeting-data'] = conf['meeting-data'].replace('.yaml', '*')
+    last_updated = time.localtime(int(
+        subprocess.check_output([
+            'git', 'log', '-1', '--pretty=%ct', conf['meeting-data']
+            ]).decode().strip()))
 
     meetings_sorter = []
     alanon_sorter = []
@@ -318,7 +169,7 @@ def gen_meeting_tex(meetings):
     meetings_sorter = sorted(meetings_sorter)
     alanon_sorter = sorted(alanon_sorter)
 
-    with open('static/meeting-schedule.tex', 'w', encoding='utf-8') as fh:
+    with open(conf['pdf-path'].replace('.pdf', '.tex'), 'w', encoding='utf-8') as fh:
 
         anonlist = conf.get('pdf-cols', {}).get('anonlist', 2) > 0
         # Write document header and cover page
@@ -356,9 +207,9 @@ def gen_meeting_tex(meetings):
             conf.get('baseURL').split('/')[2], '}}\n',
             conf.get('pdf-blurbs', {}).get('front'), '\n',
             r'    \vskip 2ex{\large\textbf{24-Hour Helpline: ',
-            conf['Params'].get('phone', '1-800-662-4357'), '}}\n',
+            conf.get('pdf-blurbs', {}).get('helpline', '1-800-662-4357'), '}}\n',
             r'    \vskip 1ex{\footnotesize{',
-            r'    Last Updated: ', time.strftime('%d %b %Y', LAST_UPDATED), '}}\n\n',
+            r'    Last Updated: ', time.strftime('%d %b %Y', last_updated), '}}\n\n',
             r'    }', '\n',
             r'  \end{minipage}', '\n',
             r'  }\hfill', '\n',
@@ -588,7 +439,7 @@ def gen_meeting_tex(meetings):
                     fh.writelines(['    ', meetings[key]['place'], meeting_tags, r'\\', '\n'])
                 fh.writelines([
                     '    ',
-                    ','.join(meetings[key]['address'].split(',', 2)[:2])
+                    ','.join(meetings[key].get('address', ',,,Online').split(',', 2)[:2])
                     ])
                 if not meetings[key].get('place'):
                     fh.write(meeting_tags)
@@ -627,14 +478,41 @@ def gen_meeting_tex(meetings):
     return True
 
 
-def gen_meeting_pdf(meetings):
+def _meeting_hours(hours):
+    '''
+    Prints a formatted list of meeting hours cast to 12-hour format.
+    '''
+    hrs = []
+    for hour in sorted(hours):
+        t = time.strftime('%-I:%M%p', time.strptime(hour, '%H:%M'))
+        hrs.append(f'\\mbox{{{t}}}')
+    return ', '.join(hrs)
+
+
+def _meeting_tags(taglist):
+    '''
+    Prints a formatted list of (presented) meeting tags
+    '''
+    meeting_tags = []
+    if 'X' in taglist:
+        meeting_tags.append('WA')
+    if 'O' in taglist:
+        meeting_tags.append('Open')
+    if meeting_tags:
+        return r'\hfill ' + ', '.join(meeting_tags)
+    return ''
+
+
+def gen_meeting_pdf(pdfpath):
     '''
     Generate PDF using LaTeX and templates
 
     Path: static/meeting-schedule.pdf
     '''
-    os.system('pdflatex ./static/meeting-schedule.tex >/dev/null')
-    os.rename('./meeting-schedule.pdf', './static/meeting-schedule.pdf')
+    texfile = pdfpath.replace('.pdf', '.tex')
+    tempfile = pathlib.Path(pdfpath).stem + '.pdf'
+    os.system(f'pdflatex {texfile} >/dev/null')
+    os.rename(f'./{tempfile}', pdfpath)
 
 
 if __name__ == '__main__':

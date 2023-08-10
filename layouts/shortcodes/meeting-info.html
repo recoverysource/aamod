@@ -1,0 +1,27 @@
+<script language="javascript" type="text/javascript" src="/js/tconvert.js"></script>
+<div class="content post__content clearfix">
+	{{- $meeting := index $.Site.Data.meetings (.Get "meeting_id") }}
+	{{- if $meeting.place }}
+	<p><b>{{ T "meeting_building" }}:</b> {{ $meeting.place }}</p>{{ end }}
+	{{- if $meeting.address }}
+	<p><b>{{ T "meeting_address" }}:</b> <a href="http://maps.google.com/maps?q={{ safeURL $meeting.address }}" target="_blank">{{ $meeting.address }}</a></p>
+	{{- if and $meeting.address ($.Site.Params.mapapikey) }}
+	<iframe class="gmap"
+	    referrerpolicy="no-referrer-when-downgrade"
+	    src="https://www.google.com/maps/embed/v1/place?key={{ safeURL ($.Site.Params.mapapikey) }}&q={{ safeURL $meeting.address }}"
+	    allowfullscreen></iframe>{{ end }}
+	{{- if $meeting.phone }}
+	<p><b>{{ T "meeting_phone" }}:</b> <a href="tel:{{ $meeting.phone }}" >{{ $meeting.phone }}</a></p>{{ end }}
+	<p><b>{{ T "meeting_times" }}:</b>
+	<table id="table__meetingtimes" style="width: auto;">{{ range $day, $hour := $meeting.time }}
+		<tr>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;<b><i>{{ $day }}:</i></b></td>
+			<td>{{ range $i, $h := $hour }}{{ if $i }}, {{ end }}<script lang="javascript"> document.write(tConvert("{{ $h }}"));</script><noscript>{{ $h }}</noscript>{{ end }}</td>
+		</tr>{{ end }}
+	</table></p>
+	<p><b>{{ T "meeting_type" }}:</b><ul>{{ range $meeting.type }}
+		<li>{{ index $.Site.Data.meetingtypes . }}</li>{{ end }}
+	</ul></p>
+	{{ if $meeting.note }}<p>{{ $meeting.note }}</p>{{ end }}
+	{{ end }}
+</div>

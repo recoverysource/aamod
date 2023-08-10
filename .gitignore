@@ -1,2 +1,12 @@
+# hugo
+*.lock
+/resources
+site
+
+# prebuild.py
 *.pyc
 __pycache__
+*meeting-schedule.*
+exampleSite/content/meetings/*.md
+!exampleSite/content/meetings/index.md
+!exampleSite/content/meetings/_index.md

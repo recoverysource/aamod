@@ -1,0 +1,21 @@
+Imaginary Treasury Report - Balance
+-----------------------------------
+
+Date: 4 January 2023
+
+------------------------------------------
+|  Description            |   Amount     |
+------------------------------------------
+|  Group 1 Donations      |   $5,000.00  |
+|  Group 2 Donations      |   $3,500.00  |
+|  Group 3 Donations      |   $7,200.00  |
+|  Another Group          |   $2,000.00  |
+|  Named Group            |   $4,800.00  |
+|  Yearly Domain Renewal  |     ($12.50) |
+------------------------------------------
+|  Total Donations        |  $22,500.00  |
+|  Total Expenses         |     ($12.50) |
+------------------------------------------
+
+Starting Balance:            $50,000.00
+Net Balance:                 $72,487.50

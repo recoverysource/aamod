@@ -1,0 +1,18 @@
+Imaginary Treasury Report - Balance
+-----------------------------------
+
+Date: 2 February 2023
+
+------------------------------------------
+|  Description            |   Amount     |
+------------------------------------------
+|  Group 1 Donations      |      $50.00  |
+|  Group 2 Donations      |      $20.00  |
+|  Book Purchase          |     ($72.50) |
+------------------------------------------
+|  Total Donations        |      $70.00  |
+|  Total Expenses         |     ($72.50) |
+------------------------------------------
+
+Starting Balance:            $72,487.50
+Net Balance:                 $72,485.00

@@ -1,0 +1,4 @@
+{{ $files := readDir (path.Join (.Get "base") ($path := .Get "path")) }}
+<ul class="report-list">{{ range sort $files ".Name" "desc" }}{{ if not .IsDir }}{{ if ne .Name "index.md" }}
+<li><a class="report-item" href="/{{ path.Join $path .Name }}">{{ .Name }}</a></li>
+{{ end }}{{ end }}{{ end }}</ul>
