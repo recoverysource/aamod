@@ -7,7 +7,7 @@ In a "production" deployment of this website, only one meeting list should be us
 
 ---
 
-**[Meeting Map](https://recoverysource.io/aamod/usage.html#meeting-map)**:
+**[Meeting Map](https://recoverysource.io/aamodule/usage.html#meeting-map)**:
 
 ```jinja
 {{</* meeting-map zoom=8 latitude=36.9 longitude=-114.8 */>}}
@@ -17,7 +17,7 @@ In a "production" deployment of this website, only one meeting list should be us
 
 ---
 
-**[Interactive List](https://recoverysource.io/aamod/usage.html#meeting-list)**:
+**[Interactive List](https://recoverysource.io/aamodule/usage.html#meeting-list)**:
 
 ```jinja
 {{%/* meeting-list mode="interactive" */%}}
@@ -27,7 +27,7 @@ In a "production" deployment of this website, only one meeting list should be us
 
 ---
 
-**[Meeting Times](https://recoverysource.io/aamod/usage.html#meeting-list)**:
+**[Meeting Times](https://recoverysource.io/aamodule/usage.html#meeting-list)**:
 
 ```jinja
 {{%/* meeting-list mode="time" */%}}
@@ -37,7 +37,7 @@ In a "production" deployment of this website, only one meeting list should be us
 
 ---
 
-**[Meeting Locations](https://recoverysource.io/aamod/usage.html#meeting-list)**:
+**[Meeting Locations](https://recoverysource.io/aamodule/usage.html#meeting-list)**:
 
 ```jinja
 {{%/* meeting-list mode="address" */%}}

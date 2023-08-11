@@ -9,7 +9,7 @@ This page demonstrates the use of features that are not used elsewhere on this d
 
 ---
 
-**[Report List](https://recoverysource.io/aamod/usage.html#report-list)**:
+**[Report List](https://recoverysource.io/aamodule/usage.html#report-list)**:
 
 ```jinja
 {{</* report-list base="static" path="reports/treasury/" */>}}
@@ -21,7 +21,7 @@ List of reports which were uploaded to [``<base>/<path>/``](https://github.com/r
 
 ---
 
-**[Meeting Info](https://recoverysource.io/aamod/usage.html#meeting-info)**:
+**[Meeting Info](https://recoverysource.io/aamodule/usage.html#meeting-info)**:
 
 ```jinja
 {{</* meeting-info meeting_id="risingtogether" */>}}

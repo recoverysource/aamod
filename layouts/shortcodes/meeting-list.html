@@ -69,8 +69,8 @@
     <label for="time-filter">{{ T "Time" }}:</label>
     <select id="time-filter" class="filter-select">
       <option value="">{{ T "all_times" }}</option>
-      {{- range $token := $sortedList }}
-      <option value="{{ $token.hour }}">{{ $token.hour }}</option>
+      {{- range $hour := sort $uniqHours }}
+      <option value="{{ $hour }}"><script lang="javascript"> document.write(tConvert("{{ $hour }}"));</script><noscript></noscript></option>
       {{- end }}
     </select>
   </div>

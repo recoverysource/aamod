@@ -65,10 +65,11 @@ def main():
     meetings = load_yaml(config['meeting-data'])
 
     # Generate content
-    #if 'stubs' in config['builders']:
-    #    gen_meeting_stubs(meetings, config['stub-path'])
-    if gen_meeting_tex(meetings, config):
-        gen_meeting_pdf(config['pdf-path'])
+    if 'stubs' in config['builders']:
+        gen_meeting_stubs(meetings, config['stub-path'])
+    if 'pdf' in config['builders']:
+        if gen_meeting_tex(meetings, config):
+            gen_meeting_pdf(config['pdf-path'])
 
 
 def load_configuration():
@@ -202,7 +203,8 @@ def gen_meeting_tex(meetings, conf):
             r'    Alcoholics Anonymous\\', '\n',
             r'    Meeting Schedule}}', '\n\n',
             r'    \vskip 2ex', '\n',
-            r'    \includegraphics[width=32ex, height=32ex]{themes/aamod/static/img/AAlogo.jpg}', '\n\n',
+            r'    \includegraphics[width=32ex, height=32ex]{',
+            conf.get('pdf-blurbs', {}).get('image'), '}', '\n\n',
             r'    \vskip 1.5ex{\textbf{',
             conf.get('baseURL').split('/')[2], '}}\n',
             conf.get('pdf-blurbs', {}).get('front'), '\n',
@@ -512,7 +514,7 @@ def gen_meeting_pdf(pdfpath):
     texfile = pdfpath.replace('.pdf', '.tex')
     tempfile = pathlib.Path(pdfpath).stem + '.pdf'
     os.system(f'pdflatex {texfile} >/dev/null')
-    os.rename(f'./{tempfile}', pdfpath)
+    os.rename(f'{tempfile}', pdfpath)
 
 
 if __name__ == '__main__':

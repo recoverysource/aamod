@@ -27,7 +27,7 @@ baseURL: https://aamod-demo.recoverysource.io/
 # Content that is dropped into the generated .tex file
 pdf-blurbs:
   # Image displayed in folded booklet
-  image: static/img/AAlogo.png
+  image: ../static/img/AAlogo.jpg
   # Helpline phone number
   helpline: 1-800-123-4567
   # Front cover of folded booklet
