@@ -25,10 +25,10 @@ prebuild:
 
 clean:
 	# hugo
-	$(RM) -r .hugo_build.lock site resources
+	$(RM) -r exampleSite/.hugo_build.lock exampleSite/site exampleSite/resources
 	# prebuild
 	find exampleSite/content/meetings ! -name '_index.md' -type f -exec rm {} +
-	$(RM) exampleSite/static/meeting-schedule.tex static/meeting-schedule.pdf
-	$(RM) exampleSite/meeting-schedule.aux meeting-schedule.log
+	$(RM) exampleSite/static/meeting-schedule.tex exampleSite/static/meeting-schedule.pdf
+	$(RM) exampleSite/meeting-schedule.aux exampleSite/meeting-schedule.log
 
 .PHONY: browse prebuild clean

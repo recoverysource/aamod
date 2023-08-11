@@ -54,9 +54,6 @@
 
 # Meeting List - Filters
 
-- id: Filter
-  translation: Filter
-
 - id: filter_noscript
   translation: "Filters require javascript!"
 
@@ -74,12 +71,6 @@
 
 - id: Time
   translation: Time
-
-- id: Day
-  translation: Day
-
-- id: Tag
-  translation: Tag
 
 - id: Meeting
   translation: Meeting

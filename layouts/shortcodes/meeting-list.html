@@ -35,6 +35,7 @@
 /* Styling for the filter menu */
 .search-bar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   background-color: #f2f2f2;
@@ -51,8 +52,8 @@
   margin-right: 20px;
 }
 
-/* Styling for the filter selects */
-.filter-select {
+/* Styling for the filter options */
+.filter-option {
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 3px;
@@ -60,44 +61,45 @@
   font-size: 14px;
   min-width: 150px;
 }
+
+/* Hide Address column on small screens */
+@media screen and (max-width: 768px) {
+  .mtg-address {
+    display: none;
+  }
+}
 </style>
 <div id="filter-menu" class="search-bar">
-
-  <div class="filter-search"><b>{{ T "Filter" }}:</b></div>
   <noscript>{{ T "filter_noscript" }}</noscript>
   <div class="filter-group">
-    <label for="time-filter">{{ T "Time" }}:</label>
-    <select id="time-filter" class="filter-select">
+    <input id="name-filter" class="filter-option" type="text" placeholder="{{ T "Meeting" }}" />
+  </div>
+  <div class="filter-group">
+    <select id="time-filter" class="filter-option">
       <option value="">{{ T "all_times" }}</option>
       {{- range $hour := sort $uniqHours }}
       <option value="{{ $hour }}"><script lang="javascript"> document.write(tConvert("{{ $hour }}"));</script><noscript></noscript></option>
       {{- end }}
     </select>
   </div>
-
   <div class="filter-group">
-    <label for="day-filter">{{ T "Day" }}:</label>
-    <select id="day-filter" class="filter-select">
+    <select id="day-filter" class="filter-option">
       <option value="">{{ T "all_days" }}</option>
       {{- range $dow := slice "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" }}{{ if in $uniqDays $dow }}
       <option value="{{ $dow }}">{{ T $dow }}</option>
       {{- end }}{{ end }}
     </select>
   </div>
-
   <div class="filter-group">
-    <label for="region-filter">{{ T "Region" }}:</label>
-    <select id="region-filter" class="filter-select">
+    <select id="region-filter" class="filter-option">
       <option value="">{{ T "all_regions" }}</option>
       {{- range $region := sort $uniqAddrs }}
       <option value="{{ $region }}">{{ $region }}</option>
       {{- end }}
     </select>
   </div>
-
   <div class="filter-group">
-    <label for="tag-filter">{{ T "Tag" }}:</label>
-    <select id="tag-filter" class="filter-select">
+    <select id="tag-filter" class="filter-option">
       <option value="">{{ T "all_tags" }}</option>
       {{- range $tag := sort $uniqTags }}
       <option value="{{ $tag }}">{{ $tag }}</option>
@@ -109,24 +111,24 @@
 <table id="meeting-table">
   <thead>
     <tr>
-      <th>{{ T "Time" }}</th>
-      <th>{{ T "Meeting" }}</th>
-      <th>{{ T "Location" }}</th>
-      <th>{{ T "Address" }}</th>
-      <th>{{ T "Region" }}</th>
-      <th style="display:none;">Tags</th>
+      <th class="mtg-time">{{ T "Time" }}</th>
+      <th class="mtg-name">{{ T "Meeting" }}</th>
+      <th class="mtg-place">{{ T "Location" }}</th>
+      <th class="mtg-address">{{ T "Address" }}</th>
+      <th class="mtg-region">{{ T "Region" }}</th>
+      <th class="mtg-type" style="display:none;">Tags</th>
     </tr>
   </thead>
   <tbody>
     {{- range $token := $sortedList }}
     {{- $meeting := index $.Site.Data.meetings $token.key }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}
-    <tr class="meeting-row" data-region="{{ trim (index (last 1 $addrParts) 0) " " }}" data-day="{{ $token.day }}" data-time="{{ $token.hour }}" data-tag="{{ range $tag := $meeting.type }}-{{ $tag }}{{ end }}-">
-      <td><script lang="javascript"> document.write(tConvert("{{ $token.hour }}")); document.write(" - {{ $token.day }}");</script><noscript>{{ $token.hour }} {{ $token.day }}</noscript></td>
-      <td><a href="/meetings/{{ $token.key }}">{{ $meeting.name }}</a>{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }}, <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} (Open){{ end }}</td>
-      <td>{{ $meeting.place }}</td>
-      <td>{{ index $addrParts 0 }}</td>
-      <td>{{ trim (index (last 1 $addrParts) 0) " " }}</td>
-      <td style="display:none;">{{ range $tag := (default $meeting.type slice)  }}-{{ $tag }}{{ end }}-</td>
+    <tr class="meeting-row" data-region="{{ trim (index (last 1 $addrParts) 0) " " }}" data-day="{{ $token.day }}" data-time="{{ $token.hour }}" data-tag="{{ range $tag := $meeting.type }}-{{ $tag }}{{ end }}-" data-name="{{ lower $meeting.name }}_{{ lower $meeting.place }}">
+      <td class="mtg-time"><script lang="javascript"> document.write(tConvert("{{ $token.hour }}")); document.write(" - {{ $token.day }}");</script><noscript>{{ $token.hour }} {{ $token.day }}</noscript></td>
+      <td class="mtg-name"><a href="/meetings/{{ $token.key }}">{{ $meeting.name }}</a>{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }}, <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} (Open){{ end }}</td>
+      <td class="mtg-place">{{ $meeting.place }}</td>
+      <td class="mtg-address">{{ index $addrParts 0 }}</td>
+      <td class="mtg-region">{{ trim (index (last 1 $addrParts) 0) " " }}</td>
+      <td class="mtg-type" style="display:none;">{{ range $tag := (default $meeting.type slice)  }}-{{ $tag }}{{ end }}-</td>
     </tr>
     {{- end }}
   </tbody>
@@ -137,13 +139,15 @@ document.addEventListener("DOMContentLoaded", function() {
   const regionFilter = document.getElementById("region-filter");
   const dayFilter = document.getElementById("day-filter");
   const timeFilter = document.getElementById("time-filter");
-  const meetingRows = document.querySelectorAll(".meeting-row");
   const tagFilter = document.getElementById("tag-filter");
+  const nameFilter = document.getElementById("name-filter");
+  const meetingRows = document.querySelectorAll(".meeting-row");
 
   regionFilter.addEventListener("change", filterMeetings);
   dayFilter.addEventListener("change", filterMeetings);
   timeFilter.addEventListener("change", filterMeetings);
   tagFilter.addEventListener("change", filterMeetings);
+  nameFilter.addEventListener("input", filterMeetings);
 
   // Load saved filter choices when the page is loaded
   loadSavedFilters();
@@ -153,31 +157,35 @@ document.addEventListener("DOMContentLoaded", function() {
     const selectedDay = dayFilter.value;
     const selectedTime = timeFilter.value;
     const selectedTag = tagFilter.value;
+    const enteredName = nameFilter.value.toLowerCase();
 
     meetingRows.forEach(row => {
       const rowRegion = row.getAttribute("data-region");
       const rowDay = row.getAttribute("data-day");
       const rowTime = row.getAttribute("data-time");
       const rowTag = row.getAttribute("data-tag");
+      const rowName = row.getAttribute("data-name");
 
       const regionMatch = selectedRegion === "" || rowRegion === selectedRegion;
       const dayMatch = selectedDay === "" || rowDay === selectedDay;
       const timeMatch = selectedTime === "" || rowTime === selectedTime;
       const tagMatch = selectedTag === "" || rowTag.includes('-' + selectedTag + '-');
+      const nameMatch = enteredName === "" || rowName.includes(enteredName);
 
-      row.style.display = regionMatch && dayMatch && timeMatch && tagMatch ? "table-row" : "none";
+      row.style.display = regionMatch && dayMatch && timeMatch && tagMatch && nameMatch ? "table-row" : "none";
     });
 
     // Save current filter choices to local storage
-    saveFilters(selectedRegion, selectedDay, selectedTime, selectedTag);
+    saveFilters(selectedRegion, selectedDay, selectedTime, selectedTag, enteredName);
   }
 
-  function saveFilters(region, day, time, tag) {
+  function saveFilters(region, day, time, tag, name) {
     const filters = {
       region: region,
       day: day,
       time: time,
-      tag: tag
+      tag: tag,
+      name: name
     };
 
     localStorage.setItem("savedFilters", JSON.stringify(filters));
@@ -191,6 +199,7 @@ document.addEventListener("DOMContentLoaded", function() {
       dayFilter.value = savedFilters.day;
       timeFilter.value = savedFilters.time;
       tagFilter.value = savedFilters.tag;
+      nameFilter.value = savedFilters.name !== undefined ? savedFilters.name : "";
 
       filterMeetings(); // Apply filters based on loaded values
     }
