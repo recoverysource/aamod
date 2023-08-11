@@ -29,7 +29,8 @@ Params:
     single: right
     home: right
     widgets: [resources, eventsidemenu, aasites]
-  widgets:
+
+  widgetlinks:
 
     resources:
       - title: Meeting Schedule

@@ -21,12 +21,12 @@ prebuild:
 # Exclusively for aamod-exampleSite
 ../mainroad:
 	git clone https://github.com/Vimux/Mainroad.git ../mainroad
-	git -C ../mainroad reset --hard e9bce51
+	git -C ../mainroad reset --hard 330cbef
 
 clean:
 	# hugo
 	$(RM) -r .hugo_build.lock site resources
-	# generate_content.py
+	# prebuild
 	find exampleSite/content/meetings ! -name '_index.md' -type f -exec rm {} +
 	$(RM) exampleSite/static/meeting-schedule.tex static/meeting-schedule.pdf
 	$(RM) exampleSite/meeting-schedule.aux meeting-schedule.log
