@@ -102,7 +102,7 @@
     <select id="tag-filter" class="filter-option">
       <option value="">{{ T "all_tags" }}</option>
       {{- range $tag := sort $uniqTags }}
-      <option value="{{ $tag }}">{{ $tag }}</option>
+      <option value="{{ $tag }}">{{ T (printf "%s%s" "c4r_" $tag) }}</option>
       {{- end }}
     </select>
   </div>
@@ -125,7 +125,7 @@
     {{- $meeting := index $.Site.Data.meetings $token.key }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}
     <tr class="meeting-row" data-region="{{ trim (index (last 1 $addrParts) 0) " " }}" data-day="{{ $token.day }}" data-time="{{ $token.hour }}" data-tag="{{ range $tag := $meeting.type }}-{{ $tag }}{{ end }}-" data-name="{{ lower $meeting.name }}_{{ lower $meeting.place }}">
       <td class="mtg-time"><script lang="javascript"> document.write(tConvert("{{ $token.hour }}")); document.write(" - {{ $token.day }}");</script><noscript>{{ $token.hour }} {{ $token.day }}</noscript></td>
-      <td class="mtg-name"><a href="/meetings/{{ $token.key }}">{{ $meeting.name }}</a>{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }}, <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} (Open){{ end }}</td>
+      <td class="mtg-name"><a href="/meetings/{{ $token.key }}">{{ $meeting.name }}</a>{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }} <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} ({{ T "c4r_O" }}){{ end }}</td>
       <td class="mtg-place">{{ $meeting.place }}</td>
       <td class="mtg-address">{{ index $addrParts 0 }}</td>
       <td class="mtg-region">{{ trim (index (last 1 $addrParts) 0) " " }}</td>
@@ -226,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function() {
 ----
 
 <ul id="meeting-address" class="meeting-list">{{- range $meeting := sort $.Site.Data.meetings }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}{{- if hasSuffix (index $addrParts 3) $addr }}
-  <li><a href="/meetings/{{ $meeting.key }}">{{ $meeting.name }}</a>, {{ index $addrParts 0 }}{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }}, <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} (Open){{ end }}</li>
+  <li><a href="/meetings/{{ $meeting.key }}">{{ $meeting.name }}</a>, {{ index $addrParts 0 }}{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }} <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} ({{ T "c4r_O" }}){{ end }}</li>
 {{ end }}{{ end }}</ul>
 {{ end }}{{/* /range */}}
 {{- else }}{{/* default: "time" */}}
@@ -239,7 +239,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <script language="javascript" type="text/javascript" src="/js/tconvert.js"></script>
 <ul id="meeting-time" class="meeting-list">{{- range $token := $sortedList }}{{- if eq $token.day $dow }}
 {{- $meeting := index $.Site.Data.meetings $token.key }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}
-  <li><script lang="javascript"> document.write(tConvert("{{ $token.hour }}"));</script><noscript>{{ $token.hour }}</noscript>: <a href="/meetings/{{ $token.key }}">{{ $meeting.name }}</a>, {{ index $addrParts 0 }}{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }}, <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} (Open){{ end }}</li>
+  <li><script lang="javascript"> document.write(tConvert("{{ $token.hour }}"));</script><noscript>{{ $token.hour }}</noscript>: <a href="/meetings/{{ $token.key }}">{{ $meeting.name }}</a>, {{ index $addrParts 0 }}{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }} <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} ({{ T "c4r_O" }}){{ end }}</li>
 {{ end }}{{ end }}</ul>
 {{ end }}{{ end }}{{/* /range */}}
 {{ end }}

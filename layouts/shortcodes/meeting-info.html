@@ -15,12 +15,12 @@
 	<p><b>{{ T "meeting_times" }}:</b>
 	<table id="table__meetingtimes" style="width: auto;">{{ range $day, $hour := $meeting.time }}
 		<tr>
-			<td>&nbsp;&nbsp;&nbsp;&nbsp;<b><i>{{ $day }}:</i></b></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;<b><i>{{ T $day }}:</i></b></td>
 			<td>{{ range $i, $h := $hour }}{{ if $i }}, {{ end }}<script lang="javascript"> document.write(tConvert("{{ $h }}"));</script><noscript>{{ $h }}</noscript>{{ end }}</td>
 		</tr>{{ end }}
 	</table></p>
-	<p><b>{{ T "meeting_type" }}:</b><ul>{{ range $meeting.type }}
-		<li>{{ index $.Site.Data.meetingtypes . }}</li>{{ end }}
+	<p><b>{{ T "meeting_type" }}:</b><ul>{{ range $tag := $meeting.type }}
+		<li>{{ T (printf "%s%s" "c4r_" $tag) }}</li>{{ end }}
 	</ul></p>
 	{{ if $meeting.note }}<p>{{ $meeting.note }}</p>{{ end }}
 	{{ end }}

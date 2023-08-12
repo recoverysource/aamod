@@ -29,16 +29,19 @@ Params:
     single: right
     home: right
     widgets: [resources, eventsidemenu, aasites]
-
-  widgetlinks:
+  widgets:
 
     resources:
+      cached: true
+      links:
       - title: Meeting Schedule
         url: /meeting-schedule.pdf
       - title: Big Book Online
         url: https://www.aa.org/bigbookonline/
 
     aasites:
+      cached: true
+      links:
       - title: A.A. Area 63 (S.D.)
         url: https://recoverysource.io/
       - title: A.A. World Services
@@ -48,7 +51,7 @@ Params:
 
 markup:
   highlight:
-    style: pygments
+    style: onesenterprise
   goldmark:
     renderer:
       # Permit raw HTML in content

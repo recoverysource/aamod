@@ -1,16 +1,16 @@
 # General
 
 - id: website_source
-  translation: "website source"
+  translation: website source
 
 - id: aawebsite_title
-  translations: "A.A. Websites"
+  translations: A.A. Websites
 
 - id: eventssidemenu_title
-  translation: "Events"
+  translation: Events
 
 - id: resources_title
-  translation: "Resources"
+  translation: Resources
 
 # Day of Week
 
@@ -38,39 +38,39 @@
 # Meeting Page
 
 - id: meeting_building
-  translation: "Building"
+  translation: Building
 
 - id: meeting_address
-  translation: "Address"
+  translation: Address
 
 - id: meeting_phone
-  translation: "Meeting Phone"
+  translation: Meeting Phone
 
 - id: meeting_times
-  translation: "Meeting Times"
+  translation: Meeting Times
 
 - id: meeting_type
-  translation: "Meeting Type"
+  translation: Meeting Type
 
 # Meeting List - Filters
 
 - id: filter_noscript
-  translation: "Filters require javascript!"
+  translation: Filters require javascript!
 
 - id: Reset
   translation: Reset
 
 - id: all_times
-  translation: "All Times"
+  translation: All Times
 
 - id: all_days
-  translation: "All Days"
+  translation: All Days
 
 - id: all_regions
-  translation: "All Regions"
+  translation: All Regions
 
 - id: all_tags
-  translation: "All Tags"
+  translation: All Tags
 
 - id: Time
   translation: Time
@@ -86,3 +86,125 @@
 
 - id: Region
   translation: Region
+
+##
+# C4R Meeting Type
+# - Copied From: https://github.com/code4recovery/spec#meeting-types
+##
+
+- id: c4r_11
+  translation: 11th Step Meditation
+- id: c4r_12x12
+  translation: 12 Steps & Traditions
+- id: c4r_A
+  translation: Secular
+- id: c4r_ABSI
+  translation: As Bill Sees It
+- id: c4r_AL
+  translation: Concurrent with Alateen
+- id: c4r_AL-AN
+  translation: Concurrent with Al-Anon
+- id: c4r_ASL
+  translation: American Sign Language
+- id: c4r_B
+  translation: Big Book
+- id: c4r_BA
+  translation: Babysitting Available
+- id: c4r_BE
+  translation: Newcomer
+- id: c4r_BI
+  translation: Bisexual
+- id: c4r_BRK
+  translation: Breakfast
+- id: c4r_C
+  translation: Closed
+- id: c4r_CAN
+  translation: Candlelight
+- id: c4r_CF
+  translation: Child-Friendly
+- id: c4r_D
+  translation: Discussion
+- id: c4r_DB
+  translation: Digital Basket
+- id: c4r_DD
+  translation: Dual Diagnosis
+- id: c4r_DR
+  translation: Daily Reflections
+- id: c4r_EN
+  translation: English
+- id: c4r_FF
+  translation: Fragrance Free
+- id: c4r_FR
+  translation: French
+- id: c4r_G
+  translation: Gay-Friendly
+- id: c4r_GR
+  translation: Grapevine
+- id: c4r_H
+  translation: Birthday
+- id: c4r_HE
+  translation: Hebrew
+- id: c4r_ITA
+  translation: Italian
+- id: c4r_JA
+  translation: Japanese
+- id: c4r_KOR
+  translation: Korean
+- id: c4r_L
+  translation: Lesbian
+- id: c4r_LGBTQ
+  translation: LGBTQ
+- id: c4r_LIT
+  translation: Literature
+- id: c4r_LS
+  translation: Living Sober
+- id: c4r_M
+  translation: Men-Only
+- id: c4r_MED
+  translation: Meditation
+- id: c4r_N
+  translation: Native American
+- id: c4r_NDG
+  translation: Indigenous
+- id: c4r_O
+  translation: Open
+- id: c4r_OUT
+  translation: Outdoor
+- id: c4r_P
+  translation: Professionals
+- id: c4r_POC
+  translation: People of Color
+- id: c4r_POL
+  translation: Polish
+- id: c4r_POR
+  translation: Portuguese
+- id: c4r_PUN
+  translation: Punjabi
+- id: c4r_RUS
+  translation: Russian
+- id: c4r_S
+  translation: Spanish
+- id: c4r_SEN
+  translation: Seniors
+- id: c4r_SM
+  translation: Smoking Permitted
+- id: c4r_SP
+  translation: Speaker
+- id: c4r_ST
+  translation: Step Study
+- id: c4r_T
+  translation: Transgender-Friendly
+- id: c4r_TC
+  translation: Temporarily Closed
+- id: c4r_TR
+  translation: Tradition Study
+- id: c4r_W
+  translation: Women-Only
+- id: c4r_X
+  translation: Wheelchair Access
+- id: c4r_XB
+  translation: Accessible Bathroom
+- id: c4r_XT
+  translation: Cross Talk Permitted
+- id: c4r_Y
+  translation: Young People
