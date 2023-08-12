@@ -106,6 +106,7 @@
       {{- end }}
     </select>
   </div>
+  <button id="reset-filters">{{ T "Reset" }}</button>
 </div>
 
 <table id="meeting-table">
@@ -141,6 +142,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const timeFilter = document.getElementById("time-filter");
   const tagFilter = document.getElementById("tag-filter");
   const nameFilter = document.getElementById("name-filter");
+  const resetFilterBtn = document.getElementById("reset-filters");
   const meetingRows = document.querySelectorAll(".meeting-row");
 
   regionFilter.addEventListener("change", filterMeetings);
@@ -148,6 +150,7 @@ document.addEventListener("DOMContentLoaded", function() {
   timeFilter.addEventListener("change", filterMeetings);
   tagFilter.addEventListener("change", filterMeetings);
   nameFilter.addEventListener("input", filterMeetings);
+  resetFilterBtn.addEventListener("click", resetFilters);
 
   // Load saved filter choices when the page is loaded
   loadSavedFilters();
@@ -203,6 +206,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
       filterMeetings(); // Apply filters based on loaded values
     }
+  }
+
+  function resetFilters() {
+    regionFilter.value = "";
+    dayFilter.value = "";
+    timeFilter.value = "";
+    tagFilter.value = "";
+    nameFilter.value = "";
+
+    filterMeetings(); // Apply filters after clearing all fields
   }
 });
 </script>

@@ -57,6 +57,9 @@
 - id: filter_noscript
   translation: "Filters require javascript!"
 
+- id: Reset
+  translation: Reset
+
 - id: all_times
   translation: "All Times"
 
