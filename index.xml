@@ -11,9 +11,9 @@ Meeting Times: &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Friday: 20:00 &amp;nbsp;&
 Address: 543 Hope Lane, Harmonyburg, NV, 89004
 Meeting Times: &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Saturday: 10:00 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Tuesday: 19:00 Meeting Type: English Open 12 Steps &amp;amp; 12 Traditions Wheelchair Access</description></item><item><title>Other Features</title><link>https://aamod-demo.recoverysource.io/features/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://aamod-demo.recoverysource.io/features/</guid><description>This page demonstrates the use of features that are not used elsewhere on this demo site.
 Report List:
-{{&amp;lt; report-list base=&amp;#34;static&amp;#34; path=&amp;#34;reports/treasury/&amp;#34; &amp;gt;}} List of reports which were uploaded to &amp;lt;base&amp;gt;/&amp;lt;path&amp;gt;/:
+Usage: {{&amp;lt; report-list base=&amp;#34;static&amp;#34; path=&amp;#34;reports/treasury/&amp;#34; &amp;gt;}} List of reports which were uploaded to &amp;lt;base&amp;gt;/&amp;lt;path&amp;gt;/:
 2022-03.txt 2022-02.txt 2022-01.txt Meeting Info:
-{{&amp;lt; meeting-info meeting_id=&amp;#34;risingtogether&amp;#34; &amp;gt;}} Provides a display of information about a meeting.
+Usage: {{&amp;lt; meeting-info meeting_id=&amp;#34;risingtogether&amp;#34; &amp;gt;}} Provides a display of information about a meeting.
 Building: Unity Community Center
 Address: 721 S Moapa Valley Blvd, Overton, NV, 89040
 Meeting Times: &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Friday: 19:00 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Wednesday: 19:00 Meeting Type: English Closed Big Book Some demonstration note.</description></item><item><title>Rebirth Connections AA</title><link>https://aamod-demo.recoverysource.io/meetings/rebirthconnections/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://aamod-demo.recoverysource.io/meetings/rebirthconnections/</guid><description> Address: 789 Restoration Plaza, Riseville, NV, 89004
