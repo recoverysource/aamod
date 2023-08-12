@@ -47,6 +47,8 @@ Params:
         url: http://www.aagrapevine.org/
 
 markup:
+  highlight:
+    style: pygments
   goldmark:
     renderer:
       # Permit raw HTML in content
