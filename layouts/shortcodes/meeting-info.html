@@ -16,7 +16,7 @@
 	<table id="table__meetingtimes" style="width: auto;">{{ range $day, $hour := $meeting.time }}
 		<tr>
 			<td>&nbsp;&nbsp;&nbsp;&nbsp;<b><i>{{ T $day }}:</i></b></td>
-			<td>{{ range $i, $h := $hour }}{{ if $i }}, {{ end }}<script lang="javascript"> document.write(tConvert("{{ $h }}"));</script><noscript>{{ $h }}</noscript>{{ end }}</td>
+			<td>{{ range $i, $h := $hour }}{{ if $i }}, {{ end }}{{ partial "formatTime.html" $h }}{{ end }}</td>
 		</tr>{{ end }}
 	</table></p>
 	<p><b>{{ T "meeting_type" }}:</b><ul>{{ range $tag := $meeting.type }}

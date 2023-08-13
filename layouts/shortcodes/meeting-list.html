@@ -30,7 +30,6 @@
 {{/* Determine which list type should be generated */}}
 {{- if eq (.Get "mode") "interactive" }}
 {{ $sortedList := sort $sorter "sortTime" }}
-<script language="javascript" type="text/javascript" src="/js/tconvert.js"></script>
 <style>
 /* Styling for the filter menu */
 .search-bar {
@@ -78,7 +77,7 @@
     <select id="time-filter" class="filter-option">
       <option value="">{{ T "all_times" }}</option>
       {{- range $hour := sort $uniqHours }}
-      <option value="{{ $hour }}"><script lang="javascript"> document.write(tConvert("{{ $hour }}"));</script><noscript></noscript></option>
+      <option value="{{ $hour }}">{{ partial "formatTime.html" $hour }}</option>
       {{- end }}
     </select>
   </div>
@@ -124,7 +123,7 @@
     {{- range $token := $sortedList }}
     {{- $meeting := index $.Site.Data.meetings $token.key }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}
     <tr class="meeting-row" data-region="{{ trim (index (last 1 $addrParts) 0) " " }}" data-day="{{ $token.day }}" data-time="{{ $token.hour }}" data-tag="{{ range $tag := $meeting.type }}-{{ $tag }}{{ end }}-" data-name="{{ lower $meeting.name }}_{{ lower $meeting.place }}">
-      <td class="mtg-time"><script lang="javascript"> document.write(tConvert("{{ $token.hour }}")); document.write(" - {{ $token.day }}");</script><noscript>{{ $token.hour }} {{ $token.day }}</noscript></td>
+      <td class="mtg-time">{{ partial "formatTime.html" $token.hour }} - {{ $token.day }}</td>
       <td class="mtg-name"><a href="/meetings/{{ $token.key }}">{{ $meeting.name }}</a>{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }} <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} ({{ T "c4r_O" }}){{ end }}</td>
       <td class="mtg-place">{{ $meeting.place }}</td>
       <td class="mtg-address">{{ index $addrParts 0 }}</td>
@@ -236,10 +235,9 @@ document.addEventListener("DOMContentLoaded", function() {
 {{ $dow }}
 ----
 
-<script language="javascript" type="text/javascript" src="/js/tconvert.js"></script>
 <ul id="meeting-time" class="meeting-list">{{- range $token := $sortedList }}{{- if eq $token.day $dow }}
 {{- $meeting := index $.Site.Data.meetings $token.key }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}
-  <li><script lang="javascript"> document.write(tConvert("{{ $token.hour }}"));</script><noscript>{{ $token.hour }}</noscript>: <a href="/meetings/{{ $token.key }}">{{ $meeting.name }}</a>, {{ index $addrParts 0 }}{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }} <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} ({{ T "c4r_O" }}){{ end }}</li>
+  <li>{{ partial "formatTime.html" $token.hour }}: <a href="/meetings/{{ $token.key }}">{{ $meeting.name }}</a>, {{ index $addrParts 0 }}{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }} <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} ({{ T "c4r_O" }}){{ end }}</li>
 {{ end }}{{ end }}</ul>
 {{ end }}{{ end }}{{/* /range */}}
 {{ end }}
