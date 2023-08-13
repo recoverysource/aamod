@@ -61,7 +61,32 @@
   min-width: 150px;
 }
 
-/* Hide Address column on small screens */
+/* Column sorting */
+.sortable {
+  cursor: pointer;
+  position: relative;
+}
+
+.sortable::before {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  position: absolute;
+  right: 5px;
+}
+
+.sort-asc::before {
+  border-bottom: 5px solid black;
+}
+
+.sort-desc::before {
+  border-top: 5px solid black;
+}
+
+/* Hide elements on small screens */
 @media screen and (max-width: 768px) {
   .mtg-address {
     display: none;
@@ -111,11 +136,11 @@
 <table id="meeting-table">
   <thead>
     <tr>
-      <th class="mtg-time">{{ T "Time" }}</th>
-      <th class="mtg-name">{{ T "Meeting" }}</th>
-      <th class="mtg-place">{{ T "Location" }}</th>
-      <th class="mtg-address">{{ T "Address" }}</th>
-      <th class="mtg-region">{{ T "Region" }}</th>
+      <th class="sortable mtg-time">{{ T "Time" }}</th>
+      <th class="sortable mtg-name">{{ T "Meeting" }}</th>
+      <th class="sortable mtg-place">{{ T "Location" }}</th>
+      <th class="sortable mtg-address">{{ T "Address" }}</th>
+      <th class="sortable mtg-region">{{ T "Region" }}</th>
       <th class="mtg-type" style="display:none;">Tags</th>
     </tr>
   </thead>
@@ -143,6 +168,9 @@ document.addEventListener("DOMContentLoaded", function() {
   const nameFilter = document.getElementById("name-filter");
   const resetFilterBtn = document.getElementById("reset-filters");
   const meetingRows = document.querySelectorAll(".meeting-row");
+  const sortableHeaders = document.querySelectorAll(".sortable");
+  let currentSortedHeader = null;
+  let ascending = true;
 
   regionFilter.addEventListener("change", filterMeetings);
   dayFilter.addEventListener("change", filterMeetings);
@@ -150,6 +178,12 @@ document.addEventListener("DOMContentLoaded", function() {
   tagFilter.addEventListener("change", filterMeetings);
   nameFilter.addEventListener("input", filterMeetings);
   resetFilterBtn.addEventListener("click", resetFilters);
+  sortableHeaders.forEach(header => {
+    header.addEventListener("click", () => {
+      toggleSort(header);
+      sortMeetings(header);
+    });
+  });
 
   // Load saved filter choices when the page is loaded
   loadSavedFilters();
@@ -215,6 +249,44 @@ document.addEventListener("DOMContentLoaded", function() {
     nameFilter.value = "";
 
     filterMeetings(); // Apply filters after clearing all fields
+  }
+
+  function toggleSort(header) {
+    if (header === currentSortedHeader) {
+      ascending = !ascending;
+    } else {
+      currentSortedHeader = header;
+      ascending = true;
+      removeSortArrows();
+      header.classList.add("sort-asc");
+    }
+    header.classList.toggle("sort-desc", !ascending);
+    header.classList.toggle("sort-asc", ascending);
+  }
+
+  function removeSortArrows() {
+    sortableHeaders.forEach(header => {
+      header.classList.remove("sort-asc", "sort-desc");
+    });
+  }
+
+  function sortMeetings(header) {
+    const columnIndex = Array.from(header.parentNode.children).indexOf(header);
+
+    const sortedRows = Array.from(meetingRows).sort((rowA, rowB) => {
+      const cellA = rowA.children[columnIndex].textContent;
+      const cellB = rowB.children[columnIndex].textContent;
+
+      // Handle empty cells
+      if (cellA === "") return ascending ? 1 : -1;
+      if (cellB === "") return ascending ? -1 : 1;
+
+      return (cellA.localeCompare(cellB)) * (ascending ? 1 : -1);
+    });
+
+    sortedRows.forEach(row => {
+      row.parentNode.appendChild(row);
+    });
   }
 });
 </script>
