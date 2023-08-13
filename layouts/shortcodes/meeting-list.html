@@ -148,7 +148,7 @@
     {{- range $token := $sortedList }}
     {{- $meeting := index $.Site.Data.meetings $token.key }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}
     <tr class="meeting-row" data-region="{{ trim (index (last 1 $addrParts) 0) " " }}" data-day="{{ $token.day }}" data-time="{{ $token.hour }}" data-tag="{{ range $tag := $meeting.type }}-{{ $tag }}{{ end }}-" data-name="{{ lower $meeting.name }}_{{ lower $meeting.place }}">
-      <td class="mtg-time">{{ partial "formatTime.html" $token.hour }} - {{ $token.day }}</td>
+      <td class="mtg-time">{{ $token.day }} - {{ partial "formatTime.html" $token.hour }}</td>
       <td class="mtg-name"><a href="/meetings/{{ $token.key }}">{{ $meeting.name }}</a>{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }} <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} ({{ T "c4r_O" }}){{ end }}</td>
       <td class="mtg-place">{{ $meeting.place }}</td>
       <td class="mtg-address">{{ index $addrParts 0 }}</td>
