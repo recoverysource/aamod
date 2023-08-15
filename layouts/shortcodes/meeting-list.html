@@ -1,10 +1,12 @@
+{{ $meetings := index $.Site.Data (default "meetings" (.Get "data")) -}}
+
 {{/* Mash data into a format usable for key-based sorting */}}
 {{- $sorter := slice }}
 {{- $uniqAddrs := slice }}
 {{- $uniqDays := slice }}
 {{- $uniqHours := slice }}
 {{- $uniqTags := slice }}
-{{- range $key, $meeting := $.Site.Data.meetings }}
+{{- range $key, $meeting := $meetings }}
   {{- range $tag := (default $meeting.type slice) }}
     {{- if not (in $uniqTags $tag) }}{{ $uniqTags = $uniqTags | append $tag }}{{ end }}
   {{- end }}
@@ -146,7 +148,7 @@
   </thead>
   <tbody>
     {{- range $token := $sortedList }}
-    {{- $meeting := index $.Site.Data.meetings $token.key }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}
+    {{- $meeting := index $meetings $token.key }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}
     <tr class="meeting-row" data-region="{{ trim (index (last 1 $addrParts) 0) " " }}" data-day="{{ $token.day }}" data-time="{{ $token.hour }}" data-tag="{{ range $tag := $meeting.type }}-{{ $tag }}{{ end }}-" data-name="{{ lower $meeting.name }}_{{ lower $meeting.place }}">
       <td class="mtg-time">{{ $token.day }} - {{ partial "formatTime.html" $token.hour }}</td>
       <td class="mtg-name"><a href="/meetings/{{ $token.key }}">{{ $meeting.name }}</a>{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }} <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} ({{ T "c4r_O" }}){{ end }}</td>
@@ -296,7 +298,7 @@ document.addEventListener("DOMContentLoaded", function() {
 {{ if eq $addr "0" }}Online{{ else }}{{ $addr }}{{ end }}
 ----
 
-<ul id="meeting-address" class="meeting-list">{{- range $meeting := sort $.Site.Data.meetings }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}{{- if hasSuffix (index $addrParts 3) $addr }}
+<ul id="meeting-address" class="meeting-list">{{- range $meeting := sort $meetings }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}{{- if hasSuffix (index $addrParts 3) $addr }}
   <li><a href="/meetings/{{ $meeting.key }}">{{ $meeting.name }}</a>, {{ index $addrParts 0 }}{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }} <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} ({{ T "c4r_O" }}){{ end }}</li>
 {{ end }}{{ end }}</ul>
 {{ end }}{{/* /range */}}
@@ -308,7 +310,7 @@ document.addEventListener("DOMContentLoaded", function() {
 ----
 
 <ul id="meeting-time" class="meeting-list">{{- range $token := $sortedList }}{{- if eq $token.day $dow }}
-{{- $meeting := index $.Site.Data.meetings $token.key }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}
+{{- $meeting := index $meetings $token.key }}{{- $addrParts := split (or $meeting.address ",,,Online") "," }}
   <li>{{ partial "formatTime.html" $token.hour }}: <a href="/meetings/{{ $token.key }}">{{ $meeting.name }}</a>, {{ index $addrParts 0 }}{{ if in $meeting.type "X" }}| <img src="/img/wheelchair.png" alt="Wheelchair Accessible" width="15" />{{ end }}{{ if in $meeting.type "BA" }} <img src="/img/childcare.png" alt="Childcare Available" width="15" />{{ end }}{{ if in $meeting.type "O" }} ({{ T "c4r_O" }}){{ end }}</li>
 {{ end }}{{ end }}</ul>
 {{ end }}{{ end }}{{/* /range */}}

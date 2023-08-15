@@ -1,6 +1,7 @@
+{{ $meetings := index $.Site.Data (default "meetings" (.Get "data")) -}}
 <article class="post">
 <div class="content post__content clearfix">
-	{{- $meeting := index $.Site.Data.meetings (.Get "meeting_id") }}
+	{{- $meeting := index $meetings (.Get "meeting_id") }}
 	{{- if $meeting.place }}
 	<p><b>{{ T "meeting_building" }}:</b> {{ $meeting.place }}</p>{{ end }}
 	{{- if $meeting.address }}

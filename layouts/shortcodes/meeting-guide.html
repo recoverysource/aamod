@@ -1,6 +1,7 @@
 {{- $meetingData := slice }}
 {{- $dowInt := dict "Sunday" 0 "Monday" 1 "Tuesday" 2 "Wednesday" 3 "Thursday" 4 "Friday" 5 "Saturday" 6 }}
-{{- range $key, $meeting := index $.Site.Data.meetings }}{{ $hidden := in $meeting.hidefrom "json" }}{{ if not $hidden }}
+{{- $meetings := index $.Site.Data (default "meetings" (.Get "data")) }}
+{{- range $key, $meeting := $meetings }}{{ $hidden := in $meeting.hidefrom "json" }}{{ if not $hidden }}
   {{- $addrParts := split (or $meeting.address ",,,") "," }}
   {{- range $dow, $hours := index $meeting "time" }}{{ range $hour := $hours }}
     {{- $meetingData = $meetingData | append (dict

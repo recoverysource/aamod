@@ -1,3 +1,4 @@
+{{ $meetings := index $.Site.Data (default "meetings" (.Get "data")) -}}
 <div class="interactive-map meeting-map" aria-hidden="true">
 <script type="text/javascript">
   let map;
@@ -9,7 +10,7 @@
       "lat": {{ .Get "latitude" | default 0 | int }},
       "lng": {{ .Get "longitude" | default 0 | int }}};
     var locations = [
-      {{- range $meeting_id, $meeting := $.Site.Data.meetings }}
+      {{- range $meeting_id, $meeting := $meetings }}
       {{- if and $meeting.longitude $meeting.latitude $meeting.name $meeting.address }}
       [ "{{ $meeting.name }}", "<b><a class=\"maplink\" href=\"/meetings/{{ $meeting_id }}\">{{ $meeting.name }}</a></b>{{ if $meeting.place }}<br>{{ $meeting.place }}{{ end }}<br>{{ $meeting.address }}<br><a class=\"maplink\" href=\"/meetings/{{ $meeting_id }}\">Meeting Information</a>", {{ float $meeting.latitude }}, {{ float $meeting.longitude }}],{{ end }}{{ end }}
       ];
