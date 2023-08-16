@@ -1,4 +1,4 @@
 {{/* Time is the most broken golang feature: https://pkg.go.dev/time#pkg-constants */}}
-{{- $timeBits := split . ":" }}{{ $h := int (index $timeBits 0) }}{{ $m := index $timeBits 1 }}
+{{- $timeBits := split . ":" }}{{ $h := int (strings.TrimLeft "0" (index $timeBits 0)) }}{{ $m := index $timeBits 1 }}
 {{- if le $h 12 }}{{ if eq $h 0 }}12{{ else }}{{ $h }}{{ end }}:{{ $m }} AM
 {{- else }}{{ sub $h 12 }}:{{ $m }} PM{{ end }}
