@@ -3,14 +3,19 @@
  **/
 
 .header__container {
-	background-image: url("/img/clouds.png");
+	background-image: url("/img/banner.webp");
 	background-size: 24em;
 	background-repeat: repeat;
 	background-position: bottom;
 }
 
+.logo__tagline {
+	color: darkblue;
+	font-size: 0.9rem;
+}
+
 .logo__text {
-	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+	text-shadow: lightgray -1px 0px, lightgray 0px 1px, lightgray 1px 0px, lightgray 0px -1px;
 }
 
 /**
@@ -137,8 +142,12 @@
  * Footer
  **/
 
+.footer {
+	color: #e7e7e7;
+}
+
 .footer a {
-	color: #93cddd;
+	color: #a6e3ff;
 }
 
 /**
