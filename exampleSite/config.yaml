@@ -4,7 +4,7 @@
 # - Used: https://github.com/recoverysource/hugo-website/blob/master/.github/workflows/deploy.yml
 ##
 baseURL: https://aamod-demo.recoverysource.io/
-title: Statestown AA (Demo Site)
+title: Statestown AA (Demonstration Webite)
 
 languageCode: en-us
 theme: [aamod, mainroad]
@@ -13,7 +13,7 @@ paginate: 100
 buildFuture: true
 
 Params:
-  description: Statestown Demonstration
+  description: Basic demonstrations of the features provided by AAmod+Hugo with basic demonstration for usage.
   #REAL-source: https://github.com/recoverysource/aamod/tree/master/exampleSite
   source: https://github.com/recoverysource/hugo-website/tree/master
   #mapapikey: <https://developers.google.com/maps/documentation/embed/get-api-key>
@@ -21,8 +21,9 @@ Params:
   copyright: Statestown Demonstration
   phone: 123-456-7890
   logo:
-    image: img/AAlogo.png
+    image: img/AAlogo.webp
     title: Statestown Demonstration
+    subtitle: Local AA Meetings
   toc: true
   mainSections: [home, meetings, about, events]
   sidebar:
@@ -36,8 +37,8 @@ Params:
       links:
       - title: Meeting Schedule
         url: /meeting-schedule.pdf
-      - title: Big Book Online
-        url: https://www.aa.org/bigbookonline/
+      - title: The Big Book
+        url: https://www.aa.org/the-big-book
 
     aasites:
       cached: true

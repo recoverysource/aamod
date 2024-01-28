@@ -5,6 +5,9 @@ menu:
     weight: 10
 ---
 
+AAMod Demo
+==========
+
 ```text
 All addresses are AI-generated and (most) will not be found on a map.
 ```
