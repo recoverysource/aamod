@@ -5,12 +5,12 @@ menu:
     weight: 10
 ---
 
+```text
+Note: All addresses are AI-generated and (most) will not be found on a map.
+```
+
 AAMod Demo
 ==========
-
-```text
-All addresses are AI-generated and (most) will not be found on a map.
-```
 
 This is a demonstration of a website built using the [AAMod](https://github.com/recoverysource/aamod)
 theme for Hugo. This is a subtheme of [Mainroad](https://mainroad-demo.netlify.app/).

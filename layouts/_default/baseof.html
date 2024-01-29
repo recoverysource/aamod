@@ -26,6 +26,7 @@
 	<link rel="stylesheet" {{ printf `href="%s"` $googleFontsLink | safeHTMLAttr }}>
 	{{- end }}
 	<link rel="preload" href="/img/AAlogo.webp" as="image">
+	<!--link rel="preload" href="/img/background.avif" as="image"-->
 	<link rel="preload" href="/img/banner.webp" as="image">
 
 	{{ $style := resources.Get "css/style.css" | resources.ExecuteAsTemplate "css/style.css" . -}}
