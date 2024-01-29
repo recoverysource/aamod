@@ -144,10 +144,12 @@
 
 .footer {
 	color: #e7e7e7;
+	font-weight: bold;
 }
 
 .footer a {
-	color: #a6e3ff;
+	color: #68ddff;
+	font-weight: bold;
 }
 
 /**
