@@ -1,7 +1,7 @@
 ---
 title: 2018 Cornhusker Roundup
 date: 2018-08-17
-menu: side
+menu: events
 ---
 
 **When:** 17 Aug 2018

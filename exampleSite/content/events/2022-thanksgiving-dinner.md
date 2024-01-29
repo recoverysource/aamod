@@ -1,7 +1,7 @@
 ---
 title: Thanksgiving Dinner
 date: 2022-11-24
-menu: side
+menu: events
 ---
 
 **When:** Thursday, 24 November 2022

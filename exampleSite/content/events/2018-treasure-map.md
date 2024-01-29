@@ -1,7 +1,7 @@
 ---
 title: Treasure Map AA Overview
 date: 2018-08-01
-menu: side
+menu: events
 ---
 
 **When:** 01 Aug 2018

@@ -1,7 +1,7 @@
 ---
 title: Intergroup Halloween Prom
 date: 2022-10-22
-menu: side
+menu: events
 ---
 
 **When:** Saturday, 22 October 2022

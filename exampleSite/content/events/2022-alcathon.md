@@ -1,7 +1,7 @@
 ---
 title: Alcathon
 date: 2022-11-12
-menu: side
+menu: events
 ---
 
 **When:** Saturday, 12 November 2022
