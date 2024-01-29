@@ -12,7 +12,7 @@
     var locations = [
       {{- range $meeting_id, $meeting := $meetings }}
       {{- if and $meeting.longitude $meeting.latitude $meeting.name $meeting.address }}
-      [ "{{ $meeting.name }}", "<b><a class=\"maplink\" href=\"/meetings/{{ $meeting_id }}\">{{ $meeting.name }}</a></b>{{ if $meeting.place }}<br>{{ $meeting.place }}{{ end }}<br>{{ $meeting.address }}<br><a class=\"maplink\" href=\"/meetings/{{ $meeting_id }}\">Meeting Information</a>", {{ float $meeting.latitude }}, {{ float $meeting.longitude }}],{{ end }}{{ end }}
+      [ "{{ htmlEscape $meeting.name }}", "<b><a class=\"maplink\" href=\"/meetings/{{ htmlEscape $meeting_id }}\">{{ htmlEscape $meeting.name }}</a></b>{{ if $meeting.place }}<br>{{ htmlEscape $meeting.place }}{{ end }}<br>{{ htmlEscape $meeting.address }}<br><a class=\"maplink\" href=\"/meetings/{{ $meeting_id }}\">Meeting Information</a>", {{ float $meeting.latitude }}, {{ float $meeting.longitude }}],{{ end }}{{ end }}
       ];
     infowindow = new google.maps.InfoWindow();
     map = new google.maps.Map(document.getElementById("map"), {
