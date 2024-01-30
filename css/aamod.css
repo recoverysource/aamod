@@ -113,24 +113,23 @@ body {
  **/
 
 .menu {
-	border: 3px solid #2a2a2a;
+	border: 3px solid #0060ae;
 }
 
-.menu__item:hover{
-	background: #f5f5f5;
+.menu__list {
+	background: #0060ae;
+}
+
+.menu__item:hover {
+	background: #c67312;
 }
 
 .menu__item--active {
-	background: #f5f5f5;
-}
-
-.menu__item--active a {
-	color: #2a2a2a;
+	background: #c67312;
 }
 
 .menu__link:hover {
-	color: #2a2a2a;
-	background: #f5f5f5;
+	background: #c67312;
 }
 
 /**
@@ -163,10 +162,10 @@ body {
  **/
 
 .footer {
-	color: #2a2a2a;
+	color: #000000;
 	font-weight: bold;
 	background: #f5f5f5;
-	border-top: 3px solid #2a2a2a;
+	border-top: 3px solid #0060ae;
 }
 
 .footer a {
