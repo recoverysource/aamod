@@ -369,18 +369,18 @@ def gen_meeting_tex(meetings, conf):
                     fh.writelines([
                         r'    \begin{minipage}{\columnwidth}', '\n',
                         r'    \vskip 1ex\textbf{',
-                        meetings[key]['name'],
+                        texsafe(meetings[key]['name']),
                         r'\hfill\begin{minipage}{\dimexpr\linewidth-',
-                        str(len(meetings[key]['name']) + 3),
+                        texsafe(len(meetings[key]['name']) + 3),
                         r'ex\relax}\raggedleft ',
                         _meeting_hours(meetings[key]['time'][dow]),
                         r'\end{minipage}}\\', '\n',
                         ])
                     if meetings[key].get('place'):
-                        fh.writelines(['    ', meetings[key]['place'], meeting_tags, r'\\', '\n'])
+                        fh.writelines(['    ', texsafe(meetings[key]['place']), meeting_tags, r'\\', '\n'])
                     fh.writelines([
                         '    ',
-                        ','.join(meetings[key]['address'].split(',', 2)[:2])
+                        texsafe(','.join(meetings[key]['address'].split(',', 2)[:2]))
                         ])
                     if not meetings[key].get('place'):
                         fh.write(meeting_tags)
@@ -391,7 +391,7 @@ def gen_meeting_tex(meetings, conf):
                     else:
                         fh.writelines([
                             '\\\\\n    ', r'{\6pt',
-                            '\n    ', meetings[key]['note'].split('\n')[0], '}\n',
+                            '\n    ', texsafe(meetings[key]['note'].split('\n')[0]), '}\n',
                             r'    \end{minipage}', '\n\n',
                             ])
                 fh.write('    }')
@@ -430,18 +430,18 @@ def gen_meeting_tex(meetings, conf):
                 fh.writelines([
                     r'    \begin{minipage}{\columnwidth}', '\n',
                     r'    \vskip 1ex\textbf{',
-                    meetings[key]['name'],
+                    texsafe(meetings[key]['name']),
                     r'\hfill\begin{minipage}{\dimexpr\linewidth-',
-                    str(len(meetings[key]['name']) + 3),
+                    texsafe(len(meetings[key]['name']) + 3),
                     r'ex\relax}\raggedleft ',
                     _meeting_hours(meetings[key]['time'][dow]),
                     r'\end{minipage}}\\', '\n',
                     ])
                 if meetings[key].get('place'):
-                    fh.writelines(['    ', meetings[key]['place'], meeting_tags, r'\\', '\n'])
+                    fh.writelines(['    ', texsafe(meetings[key]['place']), meeting_tags, r'\\', '\n'])
                 fh.writelines([
                     '    ',
-                    ','.join(meetings[key].get('address', ',,,Online').split(',', 2)[:2])
+                    texsafe(','.join(meetings[key].get('address', ',,,Online').split(',', 2)[:2]))
                     ])
                 if not meetings[key].get('place'):
                     fh.write(meeting_tags)
@@ -452,7 +452,7 @@ def gen_meeting_tex(meetings, conf):
                 else:
                     fh.writelines([
                         '\\\\\n    ', r'{\6pt',
-                        '\n    ', meetings[key]['note'].split('\n')[0], '}\n',
+                        '\n    ', texsafe(meetings[key]['note'].split('\n')[0]), '}\n',
                         r'    \end{minipage}', '\n\n',
                         ])
             fh.write('    }')
@@ -515,6 +515,26 @@ def gen_meeting_pdf(pdfpath):
     tempfile = pathlib.Path(pdfpath).stem + '.pdf'
     os.system(f'pdflatex {texfile} >/dev/null')
     os.rename(f'{tempfile}', pdfpath)
+
+
+def texsafe(text):
+    '''
+    Return a string with escaping added for special chars.
+    NOTE: This will re-escape an escaped string.
+    '''
+    special_chars = {
+            '&': '\&',
+            '%': '\%',
+            '$': '\$',
+            '#': '\#',
+            '_': '\_',
+            '^': '\\textasciicircum{}',
+            '{': '\{',
+            '}': '\}',
+            '~': '\\textasciitilde{}',
+            '\\': '\\textbackslash{}',
+            }
+    return ''.join([special_chars.get(c, c) for c in str(text)])
 
 
 if __name__ == '__main__':

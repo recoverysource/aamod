@@ -60,6 +60,7 @@ renewedspirit:
   latitude: 36.0000
   hidefrom: [json, pdf]
 
+# TEST CONSIDERATIONS: normal
 hopefulhearts:
   name: Hopeful Hearts Group
   time:
@@ -131,6 +132,7 @@ renewedhope:
   longitude: -114.4000
   latitude: 36.6000
 
+# TEST CONSIDERATIONS: texsafe chars
 renewedhope-women:
   name: Renewed Hope Group for Women
   time:
@@ -138,6 +140,7 @@ renewedhope-women:
   place: Empowerment Warehouse
   address: 234 Progress Lane, Reviveburg, NV, 89006
   type: [EN, C, B, X, BA]
+  note: "Test Characters: ', \", &, %, $, _, !, #, ^, {, }, ~"
   longitude: -114.4000
   latitude: 36.6000
 
