@@ -16,8 +16,12 @@ body {
  **/
 
 .header__container {
-	background: url("/img/banner.webp");
 	/* background-color: #f5f5f5; */
+	background: url("/img/banner.webp");
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
 }
 
 .logo__tagline {
