@@ -104,7 +104,7 @@ body {
 }
 
 .toc__menu li a:hover {
-	background: #c67312;
+	background: #dbdbdb;
 	text-decoration: none;
 }
 
@@ -113,19 +113,24 @@ body {
  **/
 
 .menu {
-	border-color: #c67312;
-}
-
-.menu__item--active {
-	background: #c67312;
+	border-color: #dbdbdb;
 }
 
 .menu__item:hover{
-	background: #c67312;
+	background: #dbdbdb;
+}
+
+.menu__item--active {
+	background: #dbdbdb;
+}
+
+.menu__item--active a {
+	color: #2a2a2a;
 }
 
 .menu__link:hover {
-	background: #c67312;
+	color: #2a2a2a;
+	background: #dbdbdb;
 }
 
 /**
@@ -160,6 +165,7 @@ body {
 .footer {
 	color: #f0f0f0;
 	font-weight: bold;
+	border-top: 3px solid #dbdbdb;
 }
 
 .footer a {
@@ -177,4 +183,13 @@ body {
 	div.toc {
 		display: none !important;
 	}
+}
+
+/**
+ * Misc.
+ **/
+
+pre, code {
+	background-color: #e8e8e8;
+	border: 1px solid #bcbcbc;
 }
