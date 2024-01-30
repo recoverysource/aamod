@@ -113,7 +113,7 @@ body {
  **/
 
 .menu {
-	border: 3px solid #0060ae;
+	border-bottom: 3px solid #c67312;
 }
 
 .menu__list {
@@ -165,7 +165,7 @@ body {
 	color: #000000;
 	font-weight: bold;
 	background: #f5f5f5;
-	border-top: 3px solid #0060ae;
+	border-top: 3px solid #c67312;
 }
 
 .footer a {
