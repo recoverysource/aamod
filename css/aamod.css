@@ -163,13 +163,14 @@ body {
  **/
 
 .footer {
-	color: #f0f0f0;
+	color: #ebebeb;
 	font-weight: bold;
+	background: #252525;
 	border-top: 3px solid #dbdbdb;
 }
 
 .footer a {
-	color: #13ed4a;
+	color: #13bb4a;
 	font-weight: bold;
 }
 
