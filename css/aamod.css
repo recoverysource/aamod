@@ -16,11 +16,8 @@ body {
  **/
 
 .header__container {
-	background-image: url("/img/banner.webp");
+	background: url("/img/banner.webp");
 	/* background-color: #f5f5f5; */
-	background-size: 24em;
-	background-repeat: repeat;
-	background-position: bottom;
 }
 
 .logo__tagline {
