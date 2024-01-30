@@ -2,4 +2,4 @@
 outputs: [json]
 url: "/meeting-guide.json"
 ---
-{{< meeting-guide data=$.Site.Data.meetings timezone="America/Los_Angeles" >}}
+{{< meeting-guide timezone="America/Los_Angeles" >}}
