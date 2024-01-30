@@ -3,11 +3,12 @@
  **/
 
 body {
-	background: url("/img/background.avif") no-repeat center center fixed;
+	background-color: #f5f5f5;
+	/* background: url("/img/background.avif") no-repeat center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
-	background-size: cover;
+	background-size: cover; */
 }
 
 /**
@@ -15,20 +16,20 @@ body {
  **/
 
 .header__container {
-	/* background-image: url("/img/banner.webp"); */
-	background-color: #f5f5f5;
+	background-image: url("/img/banner.webp");
+	/* background-color: #f5f5f5; */
 	background-size: 24em;
 	background-repeat: repeat;
 	background-position: bottom;
 }
 
 .logo__tagline {
-	color: #0060ae;
-	font-size: 1.2rem;
+	color: #000000;
+	font-size: 1.0rem;
 }
 
 .logo__text {
-	text-shadow: lightgray -1px 0px, lightgray 0px 1px, lightgray 1px 0px, lightgray 0px -1px;
+	text-shadow: #e5e5e5 -1px 0px, #e5e5e5 0px 1px, #e5e5e5 1px 0px, #e5e5e5 0px -1px;
 }
 
 /**
