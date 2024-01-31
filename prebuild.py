@@ -86,6 +86,7 @@ def load_configuration():
         'stub-path': 'content/meetings/{shortname}.md',
         'pdf-path': 'static/meeting-schedule.pdf',
         'pdf-cols': {'aalist': 4, 'anonlist': 2},
+        'hide-empty': {'aalist': False, 'anonlist': False},
         'helpline': '1-800-123-4567',
         }
 
@@ -355,6 +356,8 @@ def gen_meeting_tex(meetings, conf):
 
             # Write alanon items
             for i, dow in enumerate(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']):
+                if conf.get('hide-empty', {}).get('anonlist') and not any(x.startswith(dow) for x in alanon_sorter):
+                    continue
                 if i == 0:
                     fh.write('    ')
                 fh.writelines([
@@ -416,6 +419,8 @@ def gen_meeting_tex(meetings, conf):
 
         # Write meeting list
         for i, dow in enumerate(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']):
+            if conf.get('hide-empty', {}).get('aalist') and not any(x.startswith(dow) for x in meetings_sorter):
+                continue
             if i == 0:
                 fh.write('    ')
             fh.writelines([
