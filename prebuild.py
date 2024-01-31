@@ -394,7 +394,7 @@ def gen_meeting_tex(meetings, conf):
                             '\n    ', texsafe(meetings[key]['note'].split('\n')[0]), '}\n',
                             r'    \end{minipage}', '\n\n',
                             ])
-                fh.write('    }')
+                fh.write('    }\pagebreak[3]')
 
             # write alanon footer and resume cover
             fh.writelines([
@@ -455,7 +455,7 @@ def gen_meeting_tex(meetings, conf):
                         '\n    ', texsafe(meetings[key]['note'].split('\n')[0]), '}\n',
                         r'    \end{minipage}', '\n\n',
                         ])
-            fh.write('    }')
+            fh.write('    }\pagebreak[3]')
 
         # Write meeting list footer
         fh.writelines([
