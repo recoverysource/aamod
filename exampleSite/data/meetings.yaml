@@ -94,6 +94,17 @@ healingechoes:
   longitude: -114.7000
   latitude: 36.3000
 
+# TEST CONSIDERATION: Hour is 00
+night-owls:
+  name: Night Owls
+  time:
+    Sunday: ["00:00"]
+  place: Tranquil Mansion
+  address: 987 Serene Road, Embraceville, NV, 89004
+  type: [EN, O, B]
+  longitude: -114.7000
+  latitude: 36.3000
+
 # TEST CONSIDERATIONS: timezone=America/Chicago
 inspiringjourney:
   name: Inspiring Journey AA
