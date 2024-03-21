@@ -1,4 +1,5 @@
-{{ $meetings := index $.Site.Data (default "meetings" (.Get "data")) -}}
+{{- $meetings := index $.Site.Data (default "meetings" (.Get "data")) }}
+{{- $dowInt := dict "Sunday" 0 "Monday" 1 "Tuesday" 2 "Wednesday" 3 "Thursday" 4 "Friday" 5 "Saturday" 6 }}
 
 {{/* Mash data into a format usable for key-based sorting */}}
 {{- $sorter := slice }}
@@ -13,7 +14,7 @@
   {{- range $day, $hours := $meeting.time }}
     {{- if not (in $uniqDays $day) }}{{ $uniqDays = $uniqDays | append $day }}{{ end }}
     {{- range $hour := $hours }}
-      {{- $sortTime := printf "%s %s" $day $hour }}
+      {{- $sortTime := printf "%s %s" (index $dowInt $day) $hour }}
       {{- $addrParts := split (or $meeting.address ",,,Online") "," }}
       {{- $sortAddr := trim (index (last 1 $addrParts) 0) " " }}
       {{- if not (in $uniqAddrs $sortAddr) }}{{ $uniqAddrs = $uniqAddrs | append $sortAddr }}{{ end }}
