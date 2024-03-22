@@ -1,9 +1,9 @@
 ##
 # This configuration is used for the live demo.
-# - Site: https://aamod-demo.recoverysource.io/
+# - Site: https://aamod-demo.recoverysource.net/
 # - Used: https://github.com/recoverysource/hugo-website/blob/master/.github/workflows/deploy.yml
 ##
-baseURL: https://aamod-demo.recoverysource.io/
+baseURL: https://aamod-demo.recoverysource.net/
 title: Statestown AA (Demonstration Webite)
 
 languageCode: en-us
@@ -43,8 +43,8 @@ Params:
     aasites:
       cached: true
       links:
-      - title: A.A. Area 63 (S.D.)
-        url: https://recoverysource.io/
+      - title: Recovery Source
+        url: https://recoverysource.net/
       - title: A.A. World Services
         url: https://www.aa.org/
       - title: A.A. Grapevine

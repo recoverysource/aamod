@@ -1,8 +1,8 @@
-# NOTE: DATA HERE IS FOR DEMONSTRATION: https://aamod-demo.recoverysource.io/
+# NOTE: DATA HERE IS FOR DEMONSTRATION: https://aamod-demo.recoverysource.net/
 #
 # [Format Notes]
 #
-#  - Full Documentation: https://recoverysource.io/aamod/usage.html#meeting-format
+#  - Full Documentation: https://recoverysource.net/aamod/usage.html#meeting-format
 #  - Use of correct space and syntax in yaml files is CRITICAL!
 #    If unsure, syntax can be validated with: https://yaml-online-parser.appspot.com/
 #  - Required Fields: [name, time, type]
