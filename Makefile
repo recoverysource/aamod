@@ -21,7 +21,7 @@ prebuild:
 # Exclusively for aamod-exampleSite
 ../mainroad:
 	git clone https://github.com/Vimux/Mainroad.git ../mainroad
-	git -C ../mainroad reset --hard de57543
+	git -C ../mainroad reset --hard ed54a7c
 
 clean:
 	# hugo
