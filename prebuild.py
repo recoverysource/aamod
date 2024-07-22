@@ -68,8 +68,9 @@ def main():
     if 'stubs' in config['builders']:
         gen_meeting_stubs(meetings, config['stub-path'])
     if 'pdf' in config['builders']:
-        if gen_meeting_tex(meetings, config):
-            gen_meeting_pdf(config['pdf-path'])
+        texfile = TexBuilder(meetings, config)
+        texfile.generate()
+        gen_meeting_pdf(config['pdf-path'])
 
 
 def load_configuration():
@@ -142,38 +143,69 @@ def gen_meeting_stubs(meetings, stub_path):
                 ])
 
 
-def gen_meeting_tex(meetings, conf):
+class TexBuilder:
     '''
-    This generates the file used to produce the meetings list pdf.
-
+    Generates the file used to produce the meetings list pdf.
     Path: static/meeting-schedule.tex
     '''
-    if not conf.get('pdf-blurbs'):
-        return False
+    def __init__(self, meetings, conf):
+        self._meeting_data = meetings
+        self.conf = conf
 
-    # Find the last time the meetings directory was updated.
-    if conf['meeting-data'].endswith('yaml'):
-        conf['meeting-data'] = conf['meeting-data'].replace('.yaml', '*')
-    last_updated = time.localtime(int(
-        subprocess.check_output([
-            'git', 'log', '-1', '--pretty=%ct', conf['meeting-data']
-            ]).decode().strip()))
+        # Find last updated meeting
+        self.last_updated = self.find_timestamp(
+                conf.get('meeting-data', './data/meetings*'))
 
-    meetings_sorter = []
-    alanon_sorter = []
-    for key, meeting in meetings.items():
-        for day, hours in meeting['time'].items():
-            min_hour = sorted(hours)[0]
-            if 'AL-AN' in meetings[key]['type']:
-                alanon_sorter.append(f'{day}#{min_hour}#{key}')
-            else:
-                meetings_sorter.append(f'{day}#{min_hour}#{key}')
-    meetings_sorter = sorted(meetings_sorter)
-    alanon_sorter = sorted(alanon_sorter)
+        # Sort meeting data
+        (self.sublist, self.mainlist) = self.data_sorter('AL-AN')
 
-    with open(conf['pdf-path'].replace('.pdf', '.tex'), 'w', encoding='utf-8') as fh:
+    def blurb(self, key, default):
+        return self.conf['pdb-blurbs'].get(key, default)
 
-        anonlist = conf.get('pdf-cols', {}).get('anonlist', 2) > 0
+    def find_timestamp(self, path='./data/meetings*'):
+        '''
+        Find the last time the meetings directory was updated using git log.
+        '''
+        if path.endswith('.yaml'):
+            path = path.replace('.yaml', '*')
+        return time.localtime(int(
+            subprocess.check_output([
+                'git', 'log', '-1', '--pretty=%ct', path
+                ]).decode().strip()))
+
+    def data_sorter(self, meeting_type='AL-AN'):
+        '''
+        Returns a tuple of sorted keys (matching, not_matching) search type.
+        '''
+        # Key collectors
+        match_sorter = []
+        nomatch_sorter = []
+
+        # Generate keys for sorting
+        for key, meeting in self._meeting_data.items():
+            for day, hours in meeting['time'].items():
+                min_hour = sorted(hours)[0]
+                if meeting_type in self._meeting_data[key]['type']:
+                    match_sorter.append(f'{day}#{min_hour}#{key}')
+                else:
+                    nomatch_sorter.append(f'{day}#{min_hour}#{key}')
+
+        # Return sorted keys
+        return (sorted(match_sorter), sorted(nomatch_sorter))
+
+    def generate(self):
+        tex_path = self.conf['pdf-path'].replace('.pdf', '.tex')
+        with open(tex_path, 'w', encoding='utf-8') as file_handler:
+            self.build_wholepage(file_handler)
+
+    def build_wholepage(self, fh):
+        '''
+        Quick proof-of-concept splice.
+        TODO: Break into separate pages
+        '''
+        meetings = self._meeting_data
+        meetings_sorter, alanon_sorter = self.mainlist, self.sublist
+        anonlist = self.conf.get('pdf-cols', {}).get('anonlist', 2) > 0
         # Write document header and cover page
         fh.writelines([
             r'\documentclass[11pt,twoside,letterpaper]{article}', '\n',
@@ -200,19 +232,19 @@ def gen_meeting_tex(meetings, conf):
             r'  \rotatebox{180}{\begin{minipage}[l][\dimexpr.485\textheight]',
             r'[t]{\dimexpr 0.470\textwidth}', '\n',
             r'    {\center{\huge\textbf{', '\n',
-            f'    {conf.get("title")}\\\\\n',
+            f'    {self.conf.get("title")}\\\\\n',
             r'    Alcoholics Anonymous\\', '\n',
             r'    Meeting Schedule}}', '\n\n',
             r'    \vskip 2ex', '\n',
             r'    \includegraphics[width=32ex, height=32ex]{',
-            conf.get('pdf-blurbs', {}).get('image'), '}', '\n\n',
+            self.conf.get('pdf-blurbs', {}).get('image'), '}', '\n\n',
             r'    \vskip 1.5ex{\textbf{',
-            conf.get('baseURL').split('/')[2], '}}\n',
-            conf.get('pdf-blurbs', {}).get('front'), '\n',
+            self.conf.get('baseURL').split('/')[2], '}}\n',
+            self.conf.get('pdf-blurbs', {}).get('front'), '\n',
             r'    \vskip 2ex{\large\textbf{24-Hour Helpline: ',
-            conf.get('pdf-blurbs', {}).get('helpline', '1-800-662-4357'), '}}\n',
+            self.conf.get('pdf-blurbs', {}).get('helpline', '1-800-662-4357'), '}}\n',
             r'    \vskip 1ex{\footnotesize{',
-            r'    Last Updated: ', time.strftime('%d %b %Y', last_updated), '}}\n\n',
+            r'    Last Updated: ', time.strftime('%d %b %Y', self.last_updated), '}}\n\n',
             r'    }', '\n',
             r'  \end{minipage}', '\n',
             r'  }\hfill', '\n',
@@ -235,7 +267,7 @@ def gen_meeting_tex(meetings, conf):
             r'    \begin{minipage}[r][\dimexpr 0.485\textheight]',
             r'[t]{\dimexpr 0.485\textwidth}', '\n',
             r'      {\8pt\textbf{Additional Meeting Information}}\hrulefill', '\n\n',
-            conf.get('pdf-blurbs', {}).get('resources'), '\n\n',
+            self.conf.get('pdf-blurbs', {}).get('resources'), '\n\n',
             r'      \vskip 2ex', '\n',
             r'      {\8pt\textbf{AA Preamble}}\hrulefill\vskip 1ex', '\n\n',
             r'      {\8pt', '\n',
@@ -349,14 +381,14 @@ def gen_meeting_tex(meetings, conf):
         if anonlist:
             fh.writelines([
                 r'    {\textbf{Al-Anon}}\hrulefill\\', '\n',
-                conf.get('pdf-blurbs', {}).get('alanon'), '\n\n',
+                self.conf.get('pdf-blurbs', {}).get('alanon'), '\n\n',
                 r'    \begin{multicols}{',
-                str(conf.get('pdf-cols', {}).get('anonlist', 2)), '}\n',
+                str(self.conf.get('pdf-cols', {}).get('anonlist', 2)), '}\n',
                 ])
 
             # Write alanon items
             for i, dow in enumerate(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']):
-                if conf.get('hide-empty', {}).get('anonlist') and not any(x.startswith(dow) for x in alanon_sorter):
+                if self.conf.get('hide-empty', {}).get('anonlist') and not any(x.startswith(dow) for x in alanon_sorter):
                     continue
                 if i == 0:
                     fh.write('    ')
@@ -364,7 +396,7 @@ def gen_meeting_tex(meetings, conf):
                     r'\vskip 2ex{\8pt\textbf{', dow.upper(), r'}}\hrulefill\vskip 1ex', '\n\n',
                     r'    {\7pt', '\n',
                     ])
-    
+
                 for [day, hour, key] in [x.split('#') for x in alanon_sorter if x.startswith(dow)]:
                     if 'pdf' in meetings[key].get('hidefrom', []):
                         continue
@@ -383,7 +415,7 @@ def gen_meeting_tex(meetings, conf):
                         fh.writelines(['    ', texsafe(meetings[key]['place']), meeting_tags, r'\\', '\n'])
                     fh.writelines([
                         '    ',
-                        texsafe(','.join(meetings[key]['address'].split(',', 2)[:2]))
+                        texsafe(','.join(meetings[key].get('address', ',,,,').split(',', 2)[:2]))
                         ])
                     if not meetings[key].get('place'):
                         fh.write(meeting_tags)
@@ -414,12 +446,12 @@ def gen_meeting_tex(meetings, conf):
             r'  %%%%%%%%%%%%%%%%', '\n\n',
             r'    {\textbf{AA Meetings}}\hrulefill', '\n\n',
             r'  \begin{multicols}{',
-            str(conf.get('pdf-cols', {}).get('aalist', 4)), '}\n\n',
+            str(self.conf.get('pdf-cols', {}).get('aalist', 4)), '}\n\n',
             ])
 
         # Write meeting list
         for i, dow in enumerate(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']):
-            if conf.get('hide-empty', {}).get('aalist') and not any(x.startswith(dow) for x in meetings_sorter):
+            if self.conf.get('hide-empty', {}).get('aalist') and not any(x.startswith(dow) for x in meetings_sorter):
                 continue
             if i == 0:
                 fh.write('    ')
@@ -471,10 +503,10 @@ def gen_meeting_tex(meetings, conf):
             r'    \textbf{Closed}: Limited to those who have\\',
             r'\hphantom{.}\hskip 7ex a desire to stop drinking\\', '\n',
             r'    \textbf{WA}: Wheelchair Accessible', '\n\n',
-            r'    {\7pt\textbf{Current:} ', conf.get('baseURL'), r'meeting-times}\\', '\n',
-            r'    {\7pt\textbf{Events:} ', conf.get('baseURL'), r'events}\\', '\n\n',
+            r'    {\7pt\textbf{Current:} ', self.conf.get('baseURL'), r'meeting-times}\\', '\n',
+            r'    {\7pt\textbf{Events:} ', self.conf.get('baseURL'), r'events}\\', '\n\n',
             r'    \vskip 2ex\framebox{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{\itshape{\7pt', '\n',
-            conf.get('pdf-blurbs', {}).get('details'), '}} }\n\n',
+            self.conf.get('pdf-blurbs', {}).get('details'), '}} }\n\n',
             r'    }', '\n\n',
             ])
 
@@ -482,7 +514,6 @@ def gen_meeting_tex(meetings, conf):
             fh.write(r'  \end{multicols}\end{minipage}\end{document}')
         else:
             fh.write(r'  \end{multicols}\end{document}')
-    return True
 
 
 def _meeting_hours(hours):
