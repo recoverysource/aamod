@@ -9,8 +9,79 @@ import glob
 import os
 import pathlib
 import subprocess
+import textwrap
 import time
 import yaml
+
+
+# Template for quad-fold pamphlet with meeting info on a full sheet
+# Page_1: [cover, names/numbers, 12/12, al-anon], Page_2: [aa-meetings]
+QUAD_FOLD_PAMPHLET = textwrap.dedent(
+        '''
+        {begin_document()}
+
+        {begin_quadpage()}
+          {begin_quadrant('flip')}
+            {cover_page()}
+          {next_quadrant('flip')}
+            {begin_pagesplit(2)}
+              Names and Numbers
+            {next_pagesplit()}
+              Extra Info
+              Preamble
+            {end_pagesplit()}
+          {next_quadrant()}
+            {begin_pagesplit(2)}
+              12 Steps
+            {next_pagesplit()}
+              12 Traditions
+            {end_pagesplit()}
+          {next_quadrant()}
+            Al Anon
+          {end_quadrant()}
+        {end_quadpage()}
+
+        {begin_flexcol(4)}
+          Meeting List
+        {end_flexcol()}
+
+        {end_document()}
+        ''')
+
+TEST_PAMPHLET = textwrap.dedent(
+        '''
+        {begin_document()}
+        Hello World
+        {end_document()}
+        ''')
+
+X_TEST_PAMPHLET = textwrap.dedent(
+        '''
+        {begin_document()}
+
+        {begin_quadpage()}
+          {begin_quadrant('flip')}
+            {cover_page()}
+          {next_quadrant('flip')}
+            {begin_pagesplit(2)}
+              Names and Numbers
+            {next_pagesplit()}
+              Extra Info
+              Preamble
+            {end_pagesplit()}
+          {next_quadrant()}
+            {begin_pagesplit(2)}
+              12 Steps
+            {next_pagesplit()}
+              12 Traditions
+            {end_pagesplit()}
+          {next_quadrant()}
+            Al Anon
+          {end_quadrant()}
+        {end_quadpage()}
+
+        {end_document()}
+        ''')
 
 
 class OptsParser(object):
@@ -151,10 +222,11 @@ class TexBuilder:
     def __init__(self, meetings, conf):
         self._meeting_data = meetings
         self.conf = conf
+        #self.template = QUAD_FOLD_PAMPHLET
+        self.template = TEST_PAMPHLET
 
         # Find last updated meeting
-        self.last_updated = self.find_timestamp(
-                conf.get('meeting-data', './data/meetings*'))
+        self.last_updated = self.find_timestamp(conf['meeting-data'])
 
         # Sort meeting data
         (self.sublist, self.mainlist) = self.data_sorter('AL-AN')
@@ -194,9 +266,60 @@ class TexBuilder:
         return (sorted(match_sorter), sorted(nomatch_sorter))
 
     def generate(self):
+        '''
+        Write a generated tex file from the specified template.
+        '''
         tex_path = self.conf['pdf-path'].replace('.pdf', '.tex')
         with open(tex_path, 'w', encoding='utf-8') as file_handler:
-            self.build_wholepage(file_handler)
+            # Evaluate template as f-string using defined template functions
+            file_handler.write(eval(f"""f'''{self.template}'''""", {
+                'begin_document': self.begin_document,
+                'end_document': self.end_document,
+
+                #'begin_flexcol': self.begin_flexcol,
+                #'end_flexcol': self.end_flexcol,
+
+                #'begin_quadpage': self.begin_quadpage,
+                #'begin_quadrant': self.begin_quadrant,
+                #'next_quadrant': self.next_quadrant,
+                #'end_quadrant': self.end_quadrant,
+                #'end_quadpage': self.end_quadpage,
+
+                #'begin_pagesplit': self.begin_pagesplit,
+                #'next_pagesplit': self.next_pagesplit,
+                #'end_pagesplit': self.end_pagesplit,
+
+                #'cover_page': self.cover_page,
+                }))
+
+    def begin_document(self):
+        '''TEMPLATE: Document heading and opener.'''
+        return str(
+            r'\documentclass[11pt,twoside,letterpaper]{article}' + '\n' +
+            r'\usepackage[utf8]{inputenc}' + '\n' +
+            r'\usepackage[letterpaper,margin=0.25in]{geometry}' + '\n' +
+            r'\setlength{\parindent}{0em}' + '\n' +
+            r'\setlength{\parskip}{1ex}' + '\n' +
+            r'\usepackage{anyfontsize}' + '\n' +
+            r'\usepackage{mathptmx}' + '\n' +
+            r'\usepackage{multicol}' + '\n' +
+            r'\usepackage{microtype}' + '\n' +
+            r'\usepackage{graphicx}' + '\n' +
+            r'\usepackage{enumitem}' + '\n\n' +
+            r'\def\6pt{\fontsize{6}{7.2}\selectfont}' + '\n' +
+            r'\def\7pt{\fontsize{7}{8}\selectfont}' + '\n' +
+            r'\def\8pt{\fontsize{8.5}{10}\selectfont}' + '\n' +
+            r'\def\gutter{\hspace{0.02\textwidth}}' + '\n\n' +
+            r'\fontfamily{phv}\fontseries{mc}\selectfont' + '\n' +
+            r'\begin{document}' + '\n\n')
+
+    def end_document(self):
+        '''TEMPLATE: Document heading and opener.'''
+        return str(
+            r'\end{document}')
+
+
+
 
     def build_wholepage(self, fh):
         '''
