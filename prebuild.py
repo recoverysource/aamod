@@ -397,7 +397,7 @@ def gen_meeting_tex(meetings, conf):
                             '\n    ', texsafe(meetings[key]['note'].split('\n')[0]), '}\n',
                             r'    \end{minipage}', '\n\n',
                             ])
-                fh.write('    }\pagebreak[3]')
+                fh.write(r'    }\pagebreak[3]')
 
             # write alanon footer and resume cover
             fh.writelines([
@@ -460,7 +460,7 @@ def gen_meeting_tex(meetings, conf):
                         '\n    ', texsafe(meetings[key]['note'].split('\n')[0]), '}\n',
                         r'    \end{minipage}', '\n\n',
                         ])
-            fh.write('    }\pagebreak[3]')
+            fh.write(r'    }\pagebreak[3]')
 
         # Write meeting list footer
         fh.writelines([
@@ -528,16 +528,16 @@ def texsafe(text):
     NOTE: This will re-escape an escaped string.
     '''
     special_chars = {
-            '&': '\&',
-            '%': '\%',
-            '$': '\$',
-            '#': '\#',
-            '_': '\_',
-            '^': '\\textasciicircum{}',
-            '{': '\{',
-            '}': '\}',
-            '~': '\\textasciitilde{}',
-            '\\': '\\textbackslash{}',
+            '&': r'\&',
+            '%': r'\%',
+            '$': r'\$',
+            '#': r'\#',
+            '_': r'\_',
+            '^': r'\\textasciicircum{}',
+            '{': r'\{',
+            '}': r'\}',
+            '~': r'\textasciitilde{}',
+            '\\': r'\textbackslash{}',
             }
     return ''.join([special_chars.get(c, c) for c in str(text)])
 
